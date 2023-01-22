@@ -1,0 +1,132 @@
+{% extends 'layouts/base.twig' %}
+
+{% block headers %}
+
+<script defer src="{{ full_url_for('base_path') }}/js/edit_profile.js"></script>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="container">
+    <div class="edit_profile">
+        <center><h1>Edit Your Information</h1></center>
+
+        <div class="profile_imgs">
+            <div class="img_wrapper">
+
+            {% for i in range(0, 4) %}
+                {% if i == 0 %}
+                    {% if profile_photos[0] %}
+                        <div id="main_img">
+                    {% else %}
+                        <div id="main_img" class="add">
+                    {% endif %}
+                {% else %}
+                    <div>
+                {% endif %}
+
+                {% if profile_photos[i] %}
+                    <img src="{{ full_url_for('base_path') }}/img/{{ profile_photos[i].path }}" value="{{ profile_photos[i].id }}">
+                    <span class="rm_img">&times;</span>
+                {% else %}
+                    <div class="add_img">
+                        Add photo
+                        <form style="margin: 0;">
+                            <label for="input_img{{ i }}"><i class="fa-solid fa-file-circle-plus"></i></label>
+                            <input id="input_img{{ i }}" type="file" name="img" accept="image/*" required style="display: none;">
+                        </form> 
+                    </div>
+                {% endif %}
+                </div>
+            {% endfor %}
+
+            </div>
+        </div>
+
+        <hr>
+
+        <div class="option">
+            <div style="display: flex; flex-direction:column; width: 100%;">
+                <label for="about-me">About Me:</label>
+                <textarea  id="about-me" rows="7" maxlength="250"></textarea>
+                <span>0/250</span>
+            </div>
+        </div>
+
+        <div class="option">
+            <div style="display: flex; width: 100%">
+                <div style="width: 33%; padding-right: 10px;">
+                    <label for="">User Name</label>
+                    <input type="text" name="">
+                </div>
+                <div style="width: 33%; padding: 0 10px;">
+                    <label for="">First Name</label>
+                    <input type="text" name="">
+                </div>
+                <div style="width: 34%; padding-left: 10px;">
+                    <label for="">Last Name</label>
+                    <input type="text" name="">
+                </div>
+                            
+                        </div>
+                        <div style="display: flex; width: 100%">
+                            <div style="width: 50%; padding-right: 10px;">
+                                <label for="Maximum distance">Looking For:</label>
+                                <select name="" id="" class="field_select" style="display: block;padding: 12px 10px; margin: 8px 0; position: static; font-size: 17px;">
+                                    <option value="">Man</option>
+                                    <option value="">Women</option>
+                                    <option value="">All</option>
+                               </select>
+                            </div>
+                            <div style="width: 50%; padding-left: 10px;">
+                                <label for="">Last Name</label>
+                                <input type="text" name="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="option">
+                        <label for="Maximum distance" style="color: red;">What are you passioned about?</label>
+                        <div class="form_label">
+                            <div class="multiselect_block">
+                                <label for="select-1" class="field_multiselect">Technology</label>
+                                <input id="checkbox-1" class="multiselect_checkbox" type="checkbox">
+                                <label for="checkbox-1" class="multiselect_label"></label>
+                                <select id="select-1" class="field_select" name="technology" multiple>
+                                    <option value="1">All</option>
+                                    <option value="2">HTML</option>
+                                    <option value="3">CSS</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <hr>
+
+                    <div class="option">
+                        <p style="color: red; margin-bottom: 20px;">Share your social media links</p>
+                        <div class="option">
+                            <label for="">Instagram</label>
+                            <input type="text" name="">
+                        </div>
+                        <div class="option">
+                            <label for="">Facebook</label>
+                            <input type="text" name="">
+                        </div>
+                        <div class="option">
+                            <label for="">Twitter</label>
+                            <input type="text" name="">
+                        </div>
+                    </div>
+
+                    <div class="option" style="display:flex; justify-content: center;">
+                        <button id="update" style="width:50%; justify-content;">Update</button>
+                    </div>
+                </div>
+            </div>
+
+{% endblock %}

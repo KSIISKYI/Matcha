@@ -1,0 +1,101 @@
+{% extends 'layouts/base.twig' %}
+
+{% block headers %}
+<script defer src="{{ full_url_for('base_path') }}/js/form.js"></script>
+<script defer src="{{ full_url_for('base_path') }}/js/modal.js"></script>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="form">
+    <center><h1>Account Settings</h1></center>
+
+    <form action="{{ full_url_for('account_settings-post') }}" method="POST">
+
+        <input type="hidden" name="csrf_name" value="{{ csrf_tokens.csrf_name }}">
+        <input type="hidden" name="csrf_value" value="{{ csrf_tokens.csrf_value }}">
+
+        <label for="email"><b>Email</b></label>
+        <input type="text" placeholder="Enter Email" name="email" required value="{{ getUser().email }}"
+        {% if context.errors.0.email %}
+            style="background-color: #ffdada; border: 2px solid red;">
+            <div class="form_option_error">
+                {% for error in context.errors.0.email %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% else %}
+        >
+        {% endif %}
+
+        <hr>
+
+        <div class="form_grid">
+            <div class="form_option">
+                <i class="fa-regular fa-eye show_pass" id="show_pass"></i>
+                <div style="display: flex; justify-content: space-between;">
+                    <label for="old_password"><b>Old Password</b></label>
+                    <a class="forgot_pass" href="#" style="color: grey;">I forgot my password</a>
+                </div>
+                <input type="password" placeholder="Enter Old Password" name="old_password" value="{{ context.data.0.old_password }}"
+                {% if context.errors.0.old_password %}
+                    style="background-color: #ffdada; border: 2px solid red;">
+                    <div class="form_option_error">
+                        {% for error in context.errors.0.old_password %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                >
+                {% endif %}
+            </div>
+
+            <div class="form_option">
+                <i class="fa-regular fa-eye show_pass" id="show_pass"></i>
+                <label for="new_password"><b>New Password</b></label>
+                <input type="password" placeholder="Enter New Password" name="new_password" value="{{ context.data.0.new_password }}" 
+                {% if context.errors.0.new_password %}
+                    style="background-color: #ffdada; border: 2px solid red;">
+                    <div class="form_option_error">
+                        {% for error in context.errors.0.new_password %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                >
+                {% endif %}
+            </div>
+
+            <div class="form_option">
+                <i class="fa-regular fa-eye show_pass" id="show_pass"></i>
+                <label for="confirm_new_password"><b>Confirm New Password</b></label>
+                <input type="password" placeholder="Enter Repeat Password" name="confirm_new_password" value="{{ context.data.0.confirm_new_password }}"
+                {% if context.errors.0.confirm_new_password %}
+                    style="background-color: #ffdada; border: 2px solid red;">
+                    <div class="form_option_error">
+                        {% for error in context.errors.0.confirm_new_password %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                >
+                {% endif %}
+            </div>
+
+            <div class="form_option">
+                <button type="submit" style="font-size: 17px;font-weight: bold;">Save</button>
+            </div>
+
+        </div>
+    </form>
+    {% if context.messages %}
+        <div class="form_message">
+            {% for message in context.messages %}
+                <p style="margin:10px 0;">{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}

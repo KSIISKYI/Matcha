@@ -1,0 +1,757 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Comfortaa', cursive;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.page {
+    width: 100%;
+    min-width: 600px;
+    min-height: 100vh;
+    background-color: #95b9a359;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+/* ================= HEADER ================= */
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background-color: white; 
+    font-size: 25px;
+    box-shadow: 0 0 10px 1px grey;
+}
+
+.header-logo {
+    display: flex;
+    margin-left: 10px;
+    align-items: center;
+}
+
+.nav-bar {
+    display: flex;
+    padding: 15px;
+    color: gray;
+    align-items: center;
+}
+
+.nav-bar a {
+    margin-left: 30px;
+}
+
+
+#messages {
+    position: relative;
+}
+
+#notification {
+    position: relative;
+}
+
+.amount {
+    position: absolute;
+    left: 15px;
+    top: -5px;
+    background-color: #C14D4B;
+    font-size: 15px;
+    border-radius: 5px;
+    padding: 4px 6px;
+    color: white;
+}
+
+/* ================= CONTENT ================= */
+
+.content {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+/* .content > div {
+    box-shadow: 0 0 10px 1px grey;
+} */
+
+.container {
+    min-width: 50%;
+    max-width: 70%;
+}
+
+/* ================= AUTH ================= */
+
+.form_grid {
+    display: grid;
+    grid-template-rows: 0.1fr;
+    grid-template-columns: 1fr;
+    grid-row-gap: 15px;
+}
+
+.form_grid > .form_option {
+    position: relative;
+}
+
+.form_option > i {
+    transition: all ease 0.2s;
+}
+
+.form_option_error {
+    color: red;
+}
+
+.form_option_error > p {
+    padding: 5px;
+}
+
+.form {
+    width: 500px;
+    margin: 10px auto;
+    background-color: white;
+    border-radius: 10px;
+    border: 1px solid #95b9a3;
+    padding: 15px;
+}
+
+.form h1 {
+    margin-top: 20px;
+}
+
+form {
+    margin-top: 30px;
+    position: relative;
+}
+
+input[type=text], input[type=password] {
+  width: 100%;
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #95b9a3;
+  box-sizing: border-box;
+  background-color: #95b9a359;
+  border-radius: 5px;
+  font-size: 17px;
+}
+
+input[type=text]:focus, input[type=password]:focus {
+    background-color: #7fb99659;
+}
+
+/* Set a style for all buttons */
+button {
+  background-color: #95b9a3;
+  color: white;
+  padding: 14px 20px;
+  margin: 8px 0;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  border-radius: 5px;
+}
+
+/* Add a hover effect for buttons */
+button:hover {
+  opacity: 0.8;
+}
+
+/* Add padding to containers */
+.container {
+  padding: 20px 15px;
+  text-align: left;
+}
+
+/* The "Forgot password" text */
+span.psw {
+  float: right;
+  padding-top: 16px;
+}
+
+#show_pass, #show_conf_pass {
+    cursor: pointer;
+    position: absolute;
+    top: 40px;
+    right: 10px;
+    opacity: 0.5;
+}
+
+#show_pass:hover, #show_conf_pass:hover {
+    opacity: 1;
+}
+
+.form_message {
+    margin: 30px;
+    color: red;
+    text-align: center;
+}
+
+
+/* ================= BURGER MENU ================= */
+
+.burger-menu {
+    top: 0;
+    transform: translateX(-110%);
+    position: absolute;
+    width: auto;
+    height: 100vh;
+    background-color: white;
+    font-size: 20px;
+    transition: transform .5s;
+    z-index: 1;
+    box-shadow: 1px 0 15px 3px grey;
+}
+
+.header.open .burger-menu{
+    transform: translateX(0);
+}
+
+.burger-logo {
+    display: flex;
+    align-items: center;
+}
+
+.burger-menu-profile {
+    display: flex;
+    margin: 30px 20px;
+    align-items: center;
+}
+
+.profile-logo-demo {
+    width: 100px;
+    height: 100px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-right: 20px;
+}
+
+.profile-logo-demo img {
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+}
+
+.menu-link {
+    border-left: 5px solid white;
+    padding: 15px 20px;
+    cursor: pointer;
+}
+
+.burger-menu-list {
+    margin-top: 30px;
+}
+
+.menu-link:hover {
+    background-color: #95B9A3;
+    color: white;
+    transition: all 0.3s;
+}
+
+.selected {
+    background-color: #95B9A3;
+    color: white;
+    border-left: 5px solid green;
+}
+
+.header__burger-btn {
+    position: relative;
+    width: 40px;
+    height: 40px;
+    border: none;
+    background-color: transparent;
+    z-index: 2;
+    padding: 0 0 8px 0;
+}
+
+.header__burger-btn span {
+    position: absolute;
+    width: 30px;
+    height: 3px;
+    background-color: grey;
+    left: 5px;
+    transition: transform .5s, opacity .5s, background-color .5s;
+}
+
+.header__burger-btn span:nth-child(1) {
+    transform: translateY(-10px);
+}
+
+.header__burger-btn span:nth-child(3) {
+    transform: translateY(10px);
+}
+
+.header.open .header__burger-btn span:nth-child(1) {
+    transform: translateY(0) rotate(45deg);
+}
+
+.header.open .header__burger-btn span:nth-child(2) {
+    opacity: 0;
+}
+
+.header.open .header__burger-btn span:nth-child(3) {
+    transform: translateY(0) rotate(-45deg);
+}
+
+/* ================= FOOTER ================= */
+
+.footer {
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    padding: 10px;
+    font-size: 15px;
+    box-shadow: 0 0 10px 1px grey;
+}
+
+
+/* ================= PROFILE ================= */
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    padding: 30px 20px;
+    border-radius: 10px;
+    width: 640px;
+    margin: 0 auto;
+}
+
+.slider {
+    width: 600px;
+    height: auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.slider-line {
+    position: relative;
+    display: flex;
+    height: auto;
+    width: 600px;
+    left: 0;
+    transition: all ease 0.7s;
+}
+
+.slider-line img {
+    width: 100%;
+    height: auto;
+}
+
+.slider-pointer {
+    width: 100px;
+    height: 2px;
+    background-color: white;
+    border-radius: 5px;
+    position: relative;
+    top: -3px;
+    left: 0;
+    transition: all ease 0.7s;
+}
+
+#slider-next, #slider-prev {
+    position: absolute;
+    cursor: pointer;
+    color: white;
+    font-size: 35px;
+    opacity: 0.5;
+    padding: 10px;
+}
+
+#slider-next:hover, #slider-prev:hover {
+    opacity: 1;
+}
+
+.username {
+    color: gray;
+    text-align: center;
+    margin: 20px 0;
+    font-size: 20px;
+}
+
+.aboutMe {
+    width: 500px;
+    color: grey;
+    margin-bottom: 10px;
+}
+
+.aboutMe p {
+    color: black;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* ================= Discovery Settings ================= */
+
+.discovery_settings {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    max-width: 600px;
+    min-width: 400px;
+    padding: 40px 30px;
+    margin: 0 auto;
+}
+
+.discovery_settings h1 {
+    margin-bottom: 40px;
+}
+
+.option {
+    margin: 10px 0;
+}
+
+.range {
+    margin: 15px 0;
+}
+
+.slider_value {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.form_label {
+  margin-top: 20px;
+  position: relative;
+  /*min-height: 88px;*/
+}
+
+.form_label input,
+.field_multiselect {
+  position: relative;
+  width: 100%;
+  display: block;
+  min-height: 46px;
+  border: 1px solid #cdd6f3;
+  box-sizing: border-box;
+  border-radius: 8px;
+  padding: 12px 40px 10px 16px;
+  font-size: 14px;
+  color: #a8acc9;
+  outline-color: #cdd6f3;
+}
+.form_label input::placeholder,
+.field_multiselect::placeholder {
+  color: #a8acc9;
+}
+.form_label input:hover,
+.field_multiselect:hover {
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.16);
+}
+.form_label input:focus,
+.field_multiselect:focus {
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.16);
+}
+
+.form_label input.error {
+  border-color: #eb5757;
+}
+
+.field_multiselect {
+    /*display: flex;*/
+    /*align-items: center;*/
+  padding-right: 60px;
+}
+.field_multiselect:after {
+  content: "";
+  position: absolute;
+  right: 14px;
+  top: 15px;
+  width: 6px;
+  height: 16px;
+  background: url("data:image/svg+xml,%3Csvg width='6' height='16' viewBox='0 0 6 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 0L6 5H0L3 0Z' fill='%23A8ACC9'/%3E%3Cpath d='M3 16L6 11H0L3 16Z' fill='%23A8ACC9'/%3E%3C/svg%3E") 50% 50% no-repeat;
+}
+
+.multiselect_block {
+  position: relative;
+  width: 100%;
+}
+
+.field_select {
+  position: absolute;
+  top: calc(100% - 2px);
+  left: 0;
+  width: 100%;
+  border: 1px solid #cdd6f3;
+  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: 2px;
+  box-sizing: border-box;
+  outline-color: #cdd6f3;
+  z-index: 6;
+  border-radius: 5px;
+}
+
+.field_select[multiple] {
+  overflow-y: auto;
+}
+
+.field_select option {
+  display: block;
+  padding: 8px 16px;
+  width: 100%;
+  cursor: pointer;
+}
+.field_select option:checked {
+  background-color: #95B9A3;
+}
+
+.field_select option:hover {
+  
+  background-color: #95b9a359;
+}
+
+.field_multiselect button {
+  position: relative;
+  padding: 7px 34px 7px 8px;
+  background: #95B9A3;
+  border-radius: 4px;
+  margin-right: 9px;
+  margin-bottom: 10px;
+  width: auto;
+  transition: all ease 0.3s;
+}
+.field_multiselect button:hover, .field_multiselect button:focus {
+  background-color: #95b9a359;
+  color: black;
+}
+.field_multiselect button:after {
+  content: "";
+  position: absolute;
+  top: 7px;
+  right: 10px;
+  width: 16px;
+  height: 16px;
+  background: url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M19.4958 6.49499C19.7691 6.22162 19.7691 5.7784 19.4958 5.50504C19.2224 5.23167 18.7792 5.23167 18.5058 5.50504L12.5008 11.5101L6.49576 5.50504C6.22239 5.23167 5.77917 5.23167 5.50581 5.50504C5.23244 5.7784 5.23244 6.22162 5.50581 6.49499L11.5108 12.5L5.50581 18.505C5.23244 18.7784 5.23244 19.2216 5.50581 19.495C5.77917 19.7684 6.22239 19.7684 6.49576 19.495L12.5008 13.49L18.5058 19.495C18.7792 19.7684 19.2224 19.7684 19.4958 19.495C19.7691 19.2216 19.7691 18.7784 19.4958 18.505L13.4907 12.5L19.4958 6.49499Z' fill='%234F5588'/%3E%3C/svg%3E") 50% 50% no-repeat;
+  background-size: contain;
+  color: white;
+}
+
+.multiselect_label {
+  /*position: absolute;*/
+  top: 1px;
+  left: 2px;
+  width: 100%;
+  height: 44px;
+  cursor: pointer;
+  /*z-index: 3;*/
+}
+
+.field_select {
+  display: none;
+}
+
+input.multiselect_checkbox {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  border: none;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.multiselect_checkbox:checked ~ .field_select {
+  display: block;
+}
+
+.multiselect_checkbox:checked ~ .multiselect_label {
+  width: 40px;
+  left: initial;
+  right: 4px;
+  background: #ffffff url("data:image/svg+xml,%3Csvg width='24' height='24' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M19.4958 6.49499C19.7691 6.22162 19.7691 5.7784 19.4958 5.50504C19.2224 5.23167 18.7792 5.23167 18.5058 5.50504L12.5008 11.5101L6.49576 5.50504C6.22239 5.23167 5.77917 5.23167 5.50581 5.50504C5.23244 5.7784 5.23244 6.22162 5.50581 6.49499L11.5108 12.5L5.50581 18.505C5.23244 18.7784 5.23244 19.2216 5.50581 19.495C5.77917 19.7684 6.22239 19.7684 6.49576 19.495L12.5008 13.49L18.5058 19.495C18.7792 19.7684 19.2224 19.7684 19.4958 19.495C19.7691 19.2216 19.7691 18.7784 19.4958 18.505L13.4907 12.5L19.4958 6.49499Z' fill='%234F5588'/%3E%3C/svg%3E") 50% 50% no-repeat;
+}
+
+hr {
+    border: none;
+    height: 2px;
+    background: #e8e8e8;
+    margin: 20px 0;
+    border-radius: 32px;
+}
+
+select:hover {
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.16);
+}
+
+
+/* ================= Edit Profile ================= */
+
+.edit_profile {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 10px;
+    padding: 30px 20px;
+}
+
+.profile_imgs {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    margin: 50px 0 30px;
+}
+
+
+
+.img_wrapper {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 0.483fr);
+  grid-column-gap: 10px;
+  grid-row-gap: 8px;
+  font-size: 45px;
+  width: 100%;
+}
+
+.img_wrapper > div {
+    border-radius: 5px;
+    overflow: hidden;
+    position: relative;
+}
+
+#main_img {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-row-start: 1;
+    grid-row-end: 3;
+}
+
+#main_img.add::after {
+    content: attr(data-el);
+    display: block;
+    padding-top: 105%;
+}
+
+img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+.rm_img {
+    position: absolute;
+    right: 2%;
+    margin-top: -5px;
+    color: grey;
+    cursor: pointer;
+    transition: all ease 0.3s;
+}
+
+.rm_img:hover {
+    color: black;
+}
+
+.add_img {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    font-size: 2vw;
+    background-color: #eaeaea;
+    color: #ccc;
+}
+
+.add_img i {
+    margin-top: 10px;
+    cursor: pointer;
+    transition: all ease 0.3s;
+}
+
+.add_img i:hover {
+    color: black;
+}
+
+textarea {
+    resize: none;
+    margin: 10px 0;
+    border-radius: 5px;
+    font-size: 15px;
+    padding: 5px 7px;
+    line-height: 20px;
+    color: #555957;
+}
+
+textarea:focus {
+    outline: 2px solid #95B9A3;
+}
+
+/* ================= Modal Window ================= */
+
+.modal_message {
+    position:  relative;
+    background-color: white;
+    border-radius: 5px;
+    overflow: hidden;
+    padding: 20px;
+    top: 100px;
+    z-index: 3;
+    transform: translateY(0);
+    transition: transform 0.5s;
+}
+
+.modal_message.close {
+    transform: translateY(calc(-100px - 100%));
+}
+
+.modal {
+    position: fixed;
+    z-index: 3;
+    background-color: rgb(0, 0, 0, 0.5);
+    width: 100%;
+    height: 100%;
+    display: none;
+    justify-content: center;
+    /*align-items: center;*/
+}
+
+.modal-content {
+    max-width: 80%;
+    height: auto;
+}
+
+.modal-content img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
