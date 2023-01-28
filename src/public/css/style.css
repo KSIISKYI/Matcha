@@ -201,6 +201,7 @@ span.psw {
     transform: translateX(-110%);
     position: absolute;
     width: auto;
+    min-width: 300px;
     height: 100vh;
     background-color: white;
     font-size: 20px;
@@ -583,6 +584,24 @@ select:hover {
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.16);
 }
 
+#map { 
+    height: 250px; 
+    border-radius: 5px;
+    border: 1px solid grey;
+    background-color: #eaeaea;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2vw;
+    flex-direction: column;
+    color: grey;
+    cursor: pointer;
+    transition: all ease 0.3s;
+}
+
+#map:hover {
+    color: black;
+}
 
 /* ================= Edit Profile ================= */
 

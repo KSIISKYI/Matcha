@@ -15,8 +15,6 @@ class UserService
     {
         $validation = $validator->make($data, [
             'username' => 'required|min:6|max:15|usernameAvailable|alpha_dash',
-            // 'first_name' => 'required|max:15|alpha_spaces',
-            // 'last_name' => 'required|max:15|alpha_spaces',
             'email' => 'required|email|emailAvailable',
             'password' => 'required|min:8|alpha_dash',
             'confirm_password' => 'required|same:password'
@@ -60,9 +58,6 @@ class UserService
                 'confirm_new_password' => 'required|same:new_password'
             ]);
 
-            echo ' emailpass ';
-            var_dump($user->email !== $data['email'] && (!empty($data['old_password']) OR !empty($data['new_password']) OR !empty($data['confirm_new_password'])));
-
             $validation->validate();
 
             if ($validation->fails()) {
@@ -74,8 +69,7 @@ class UserService
                 $validation = $validator->make($data, [
                     'email' => 'required|email|emailAvailable'
                 ]);
-                echo ' email ';
-    
+
                 $validation->validate();
     
                 if ($validation->fails()) {
@@ -91,8 +85,6 @@ class UserService
                     'new_password' => 'required|min:8|alpha_dash',
                     'confirm_new_password' => 'required|same:new_password'
                 ]);
-    
-                echo ' pass ';
     
                 $validation->validate();
     

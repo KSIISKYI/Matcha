@@ -1,42 +1,18 @@
-let multiselect_block_values = [];
 let new_images = [];
 let rm_images = [];
+let about_me = document.querySelector('#about-me');
 
-let multiselect_block = document.querySelectorAll(".multiselect_block");
-    multiselect_block.forEach(parent => {
-        let label = parent.querySelector(".field_multiselect");
-        let select = parent.querySelector(".field_select");
-        let text = label.innerHTML;
-        select.addEventListener("change", function(element) {
-        	multiselect_block_values = [];
+about_me.addEventListener('input', function(e) {
+	e.target.nextSibling.nextSibling.innerHTML = e.target.value.length + '/250'
+})
 
-            let selectedOptions = this.selectedOptions;
-            label.innerHTML = "";
-            for (let option of selectedOptions) {
-                let button = document.createElement("button");
-                button.type = "button";
-                button.className = "btn_multiselect";
-                button.textContent = option.innerHTML;
-                multiselect_block_values.push(option.value) // append selected value of multiselect_block_values array
-                option.style.display = 'none';
-                button.onclick = _ => {
-                    option.style.display = 'block';
-                    option.selected = false;
-                    button.remove();
+function countChars(about_me) {
+	about_me.nextSibling.nextSibling.innerHTML = about_me.value.length + '/250'
+}
 
-                    let i = multiselect_block_values.indexOf(option.value);
-                    
-                    if (i !== -1) multiselect_block_values.splice(i, 1); // delete selected value of multiselect_block_values array
+countChars(about_me);
 
-                    if (!select.selectedOptions.length) label.innerHTML = text
-                };
-                label.append(button);
-            }
-        })
-    })
-
-
-let forms = document.querySelectorAll('form');
+let forms = document.querySelectorAll('.input_photo');
 let update_form = new FormData();
 
 forms.forEach(form => {
@@ -46,8 +22,6 @@ forms.forEach(form => {
     	let cropped_img = change_and_add_img(e.target, this);
     })
 })
-
-
 
 function change_and_add_img(input, form) {
 	let raw_img = new Image();
@@ -78,7 +52,6 @@ function change_and_add_img(input, form) {
 
 	return cropped_img;
 }
-
 
 function cropp_img(raw_img, cropped_img) {
 	let canvas = document.createElement('canvas');
@@ -182,43 +155,37 @@ document.querySelectorAll('.rm_img').forEach(button => {
 	button.onclick = remove_img;
 })
 
-document.querySelector('#update').onclick = function() {
-	// console.log(new_images);
-	// console.log(rm_images);
+document.querySelector('#update_profile').addEventListener('submit', function(e) {
+	e.preventDefault();
 
-	rm_images.forEach(img_id => {
-		fetch(`http://localhost:8000/profile/profile_images/${img_id}`, {
+	let form_data = new FormData(e.target);
+
+	send_edit_profile_form(form_data).then(console.log('finosh'));
+});
+
+async function send_edit_profile_form(form_data) {
+
+	for(img_id of rm_images) {
+		await fetch(`http://localhost:8000/profile/profile_images/${img_id}`, {
 			method: 'DELETE'
 		})
-	});
+	}
 
-	new_images.forEach(new_img => {
+	for (new_img of new_images) {
 		let img_new_form = new FormData;
 		img_new_form.append('img_base64', new_img.replace(/^data:image\/jpeg;base64,/, ''));
 
-		fetch('http://localhost:8000/profile/profile_images', {
+		 await fetch('http://localhost:8000/profile/profile_images', {
 			method: 'POST',
 			body: img_new_form
 		})
-	});
+	}
 
-	location.replace(location.href);
-	// fetch('save.php', {
- //                method: 'POST',
- //                body: update_form
- //            })
- //            .then((response) => {
- //                    console.log('ok');
- //            })
+	await fetch(`http://localhost:8000/profile/settings`, {
+		method: 'POST',
+		body: form_data
+	})
+
+	location.replace(location.href)
 }
-
-
-
-
-
-
-
-
-
-
 

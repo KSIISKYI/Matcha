@@ -17,7 +17,13 @@
         <input type="hidden" name="csrf_value" value="{{ csrf_tokens.csrf_value }}">
 
         <label for="email"><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" required value="{{ getUser().email }}"
+        <input type="text" placeholder="Enter Email" name="email" required 
+        {% if context.data.0.email %}
+            value="{{ context.data.0.email }}"
+        {% else  %}
+            value="{{ getUser().email }}"
+        {% endif %}
+        
         {% if context.errors.0.email %}
             style="background-color: #ffdada; border: 2px solid red;">
             <div class="form_option_error">

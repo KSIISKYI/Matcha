@@ -1,9 +1,8 @@
 {% extends 'layouts/base.twig' %}
 
 {% block headers %}
-
 <script defer src="{{ full_url_for('base_path') }}/js/edit_profile.js"></script>
-
+<script defer src="{{ full_url_for('base_path') }}/js/multiselect.js"></script>
 {% endblock %}
 
 
@@ -33,7 +32,7 @@
                 {% else %}
                     <div class="add_img">
                         Add photo
-                        <form style="margin: 0;">
+                        <form style="margin: 0;" class="input_photo">
                             <label for="input_img{{ i }}"><i class="fa-solid fa-file-circle-plus"></i></label>
                             <input id="input_img{{ i }}" type="file" name="img" accept="image/*" required style="display: none;">
                         </form> 
@@ -47,86 +46,183 @@
 
         <hr>
 
-        <div class="option">
-            <div style="display: flex; flex-direction:column; width: 100%;">
-                <label for="about-me">About Me:</label>
-                <textarea  id="about-me" rows="7" maxlength="250"></textarea>
-                <span>0/250</span>
-            </div>
-        </div>
+        <form id="update_profile">
 
-        <div class="option">
-            <div style="display: flex; width: 100%">
-                <div style="width: 33%; padding-right: 10px;">
-                    <label for="">User Name</label>
-                    <input type="text" name="">
-                </div>
-                <div style="width: 33%; padding: 0 10px;">
-                    <label for="">First Name</label>
-                    <input type="text" name="">
-                </div>
-                <div style="width: 34%; padding-left: 10px;">
-                    <label for="">Last Name</label>
-                    <input type="text" name="">
-                </div>
-                            
+            <div class="form_grid">
+                <div class="form_option">
+                    <div style="display: flex; flex-direction:column; width: 100%;">
+                        <label for="about_me">About Me:</label>
+                        <textarea  id="about-me" name="about_me" rows="7" maxlength="250"
+                        {% if errors.0.about_me %}
+                            style="background-color: #ffdada; border: 2px solid red;"
+                        {% endif %}
+                        {% if data.0.about_me %}
+                            >{{ data.0.about_me }}</textarea>
+                        {% else %}
+                            >{{ user.profile.about_me }}</textarea>
+                        {% endif %}
+                        <span>0/250</span>
+                    </div>
+                    {% if errors.0.about_me %}
+                        <div class="form_option_error">
+                        {% for error in errors.0.about_me %}
+                            <p>{{ error }}</p>
+                        {% endfor %}
                         </div>
-                        <div style="display: flex; width: 100%">
-                            <div style="width: 50%; padding-right: 10px;">
-                                <label for="Maximum distance">Looking For:</label>
-                                <select name="" id="" class="field_select" style="display: block;padding: 12px 10px; margin: 8px 0; position: static; font-size: 17px;">
-                                    <option value="">Man</option>
-                                    <option value="">Women</option>
-                                    <option value="">All</option>
-                               </select>
-                            </div>
-                            <div style="width: 50%; padding-left: 10px;">
-                                <label for="">Last Name</label>
-                                <input type="text" name="">
-                            </div>
+                    {% endif %}
+                </div>
+
+                <div class="form_option">
+                    <div style="display: flex; width: 100%">
+                        <div style="width: 33%; padding-right: 10px;">
+                            <label for="username">User Name</label>
+                            <input type="text" name="username" required
+                            {% if errors.0.username %}
+                                style="background-color: #ffdada; border: 2px solid red;"
+                            {% endif %}
+                            {% if data.0.username %}
+                                value="{{ data.0.username }}"
+                            {% else %}
+                                value="{{ user.username }}"
+                            {% endif %}
+                            >
+                            {% if errors.0.username %}
+                                <div class="form_option_error">
+                                {% for error in errors.0.username %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div style="width: 33%; padding: 0 10px;">
+                            <label for="first_name">First Name</label>
+                            <input type="text" name="first_name" 
+                            {% if errors.0.first_name %}
+                                style="background-color: #ffdada; border: 2px solid red;"
+                            {% endif %}
+                            {% if data.0.first_name %}
+                                value="{{ data.0.first_name }}"
+                            {% else %}
+                                value="{{ user.profile.first_name }}"
+                            {% endif %}
+                            >
+                            {% if errors.0.first_name %}
+                                <div class="form_option_error">
+                                {% for error in errors.0.first_name %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div style="width: 34%; padding-left: 10px;">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" name="last_name" 
+                            {% if errors.0.last_name %}
+                                style="background-color: #ffdada; border: 2px solid red;"
+                            {% endif %}
+                            {% if data.0.last_name %}
+                                value="{{ data.0.last_name }}"
+                            {% else %}
+                                value="{{ user.profile.last_name }}"
+                            {% endif %}
+                            >
+                            {% if errors.0.last_name %}
+                                <div class="form_option_error">
+                                {% for error in errors.0.last_name %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <div class="form_option">
+                    <div style="display: flex; width: 100%">
+                        <div style="width: 50%; padding-right: 10px;">
+                            <label for="gender">My Gender:</label>
+                            <select name="gender" class="field_select" style="display: block;padding: 12px 10px; margin: 8px 0; position: static; font-size: 17px;">
+                                <option value="">Not selected</option>
+                                {% for gender in genders %}
+                                    <option value="{{ gender.id }}"
+                                    {% if gender.id == user.profile.gender.id %}
+                                        selected
+                                    {% endif %}
+                                    >{{ gender.gender }}</option>        
+                                {% endfor %}
+                        </select>
+                        </div>
+                        <div style="width: 50%; padding-left: 10px;">
+                            <label for="age">Age</label>
+                            <input type="text" name="age"
+                            {% if errors.0.age %}
+                                style="background-color: #ffdada; border: 2px solid red;"
+                            {% endif %}
+                            {% if data.0.age %}
+                                value="{{ data.0.age }}"
+                            {% else %}
+                                value="{{ user.profile.age }}"
+                            {% endif %}
+                            >
+                            {% if errors.0.age %}
+                                <div class="form_option_error">
+                                {% for error in errors.0.age %}
+                                    <p>{{ error }}</p>
+                                {% endfor %}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
+                </div>
 
+                <div class="form_option">
                     <hr>
-
-                    <div class="option">
-                        <label for="Maximum distance" style="color: red;">What are you passioned about?</label>
-                        <div class="form_label">
-                            <div class="multiselect_block">
-                                <label for="select-1" class="field_multiselect">Technology</label>
-                                <input id="checkbox-1" class="multiselect_checkbox" type="checkbox">
-                                <label for="checkbox-1" class="multiselect_label"></label>
-                                <select id="select-1" class="field_select" name="technology" multiple>
-                                    <option value="1">All</option>
-                                    <option value="2">HTML</option>
-                                    <option value="3">CSS</option>
-                                </select>
-                            </div>
+                    <label for="Maximum distance" style="color: red;">What are you passionate about?</label>
+                    <div class="form_label">
+                        <div class="multiselect_block">
+                            <label for="select-1" class="field_multiselect">Interests</label>
+                            <input id="checkbox-1" class="multiselect_checkbox" type="checkbox">
+                            <label for="checkbox-1" class="multiselect_label"></label>
+                            <select id="select-1" class="field_select" name="interests[]" multiple>
+                                {% for interest in interests %}
+                                    <option value="{{ interest.id }}"
+                                    {% if interest.id in user.profile.interests.pluck('id') %}
+                                        selected
+                                    {% endif %}
+                                    >{{ interest.name }}</option>
+                                {% endfor %}
+                            </select>
                         </div>
-                    </div>
-
-                    <hr>
-
-                    <div class="option">
-                        <p style="color: red; margin-bottom: 20px;">Share your social media links</p>
-                        <div class="option">
-                            <label for="">Instagram</label>
-                            <input type="text" name="">
-                        </div>
-                        <div class="option">
-                            <label for="">Facebook</label>
-                            <input type="text" name="">
-                        </div>
-                        <div class="option">
-                            <label for="">Twitter</label>
-                            <input type="text" name="">
-                        </div>
-                    </div>
-
-                    <div class="option" style="display:flex; justify-content: center;">
-                        <button id="update" style="width:50%; justify-content;">Update</button>
                     </div>
                 </div>
+
+                <div class="form_option">
+                    <hr>
+                    <p style="color: red;">Share your social media links</p> 
+                </div>
+                
+                <div class="form_option">
+                    <label for="instagram_link">Instagram</label>
+                    <input type="text" name="instagram_link" value="{{ user.profile.instagram_link }}">
+                </div>
+
+                <div class="form_option">
+                    <label for="twitter_link">Twitter</label>
+                    <input type="text" name="twitter_link" value="{{ user.profile.twitter_link }}">
+                </div>
+
+                <div class="form_option">
+                    <label for="facebook_link">Facebook</label>
+                    <input type="text" name="facebook_link" value="{{ user.profile.facebook_link }}">
+                </div>
+
+                <div class="form_option" style="display:flex; justify-content: center;">
+                    <button id="update" style="width:50%; justify-content;">Update</button>
+                </div>
             </div>
+        </form>
+    </div>
+</div>
 
 {% endblock %}

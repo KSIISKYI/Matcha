@@ -111,5 +111,11 @@ $container->set('GoogleAuthController', function (Container $container) {
     return new \App\Controllers\GoogleAuthController($container);
 });
 
+$container->set('DiscoverySettingsController', function (Container $container) {
+    // retrieve the 'view' from the container
+    
+    return new \App\Controllers\DiscoverySettingsController($container);
+});
+
 $routes = require_once __DIR__ . '/../app/routes.php';
 $routes($app);

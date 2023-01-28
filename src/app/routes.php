@@ -19,18 +19,26 @@ return function(App $app) {
     })->add(new GuestMiddleware($app->getContainer()));
 
     $app->group('', function(RouteCollectorProxy $group) use($app) {
-        $group->get('/profile', 'ProfileController:showProfile')->setName('profile-index');
+        $group->get('/profile', 'ProfileController:show')->setName('profile-index');
         $group->get('/auth/signout', 'AuthController:logout')->setName('signout-get');
-        $group->get('/profile/settings', 'ProfileController:showProfileSettings')->setName('profile_settings-get');
+
+        $group->get('/profile/settings', 'ProfileController:showSettings')->setName('profile_settings-get');
+        $group->post('/profile/settings', 'ProfileController:update');
+
         $group->post('/profile/profile_images', 'ProfilePhotoController:store');
         $group->delete('/profile/profile_images/{profile_image_id}', 'ProfilePhotoController:destroy')
             ->add(new IsProfilePhotoCreatorMiddleware($app->getContainer()));
+
         $group->get('/account_settings', 'UserController:showSettings')->setName('account_settings-get')->add('csrf');
         $group->post('/account_settings', 'UserController:updateSettings')->setName('account_settings-post')->add('csrf');
+
+        $group->get('/discovery_settings', 'DiscoverySettingsController:showSettings')->setName('discovery_settings-get')->add('csrf');
+        $group->post('/discovery_settings', 'DiscoverySettingsController:updateSettings')->setName('discovery_settings-post')->add('csrf');
     })->add(new AuthenticateMiddleware($app->getContainer())); 
 
     $app->get('', function() {})->setName('base_path');
     $app->post('/account_settings/reset_password', 'UserController:resetPassword')->setName('reset_password-post');
     $app->get('/change_email', 'UserController:sendActivationMail');
     $app->post('/change_email', 'UserController:changeMail');
+    $app->get('/test', 'HomeController:index');
 };

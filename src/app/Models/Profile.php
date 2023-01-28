@@ -13,7 +13,7 @@ class Profile extends Model
 
     public function user()
     {
-        return $this->hasOne(User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function gender()
@@ -24,5 +24,15 @@ class Profile extends Model
     public function profile_photos()
     {
         return $this->hasMany(ProfilePhoto::class);
+    }
+
+    public function interests()
+    {
+        return $this->belongsToMany(Interest::class);
+    }
+
+    public function discovery_settings()
+    {
+        return $this->belongsTo(DiscoverySetting::class);
     }
 }

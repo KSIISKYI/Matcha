@@ -1,0 +1,1 @@
+{"csrf_name":"csrf63d1693a4e63f","csrf_value":"lW6JkLavBllk\/m78SLBj4blcoO5JqbrQsk4K3rK3f+2jD7\/zjpljaFKfV8t+hFDW3T7G3XrPiuKGeDu4hNVI1A==","gender":"2","interests":["1","2","4"],"max_distance":"18.00","age_min":"22.00","age_max":"46.00","fame_rating_min":"8.00","fame_rating_max":"11.00"}
