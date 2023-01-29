@@ -7,29 +7,19 @@ let diapason;
 map_block.addEventListener('click', function(e) {
     this.innerHTML = '';
 
-    get_my_location().then(function() {
+    let init = async () => {
+        my_position = await get_position();
+
         open_map();
 
         map.on('click', function (e) {
 
             set_marker(e.latlng);
         });
-    })
+    };
+
+    init();
 }, { once: true })
-
-function get_my_location() {
-    return new Promise(function(resolve, reject) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            my_position = position.coords;
-
-            resolve();
-        }, function(error) {
-            my_position = {latitude: 0, longitude: 0};
-
-            resolve();
-        })
-    })
-}
 
 function open_map() {
     map = L.map('map').setView([my_position.latitude, my_position.longitude], 5); 
@@ -97,4 +87,33 @@ function zoom_map(position) {
     }
 
     map.setView(position, scale);
+}
+
+async function get_my_position_by_ip() {
+    let response = await fetch('https://api.ipify.org/?format=json');
+    let ip = await response.json()
+    
+    let position_resp = await fetch(`http://ip-api.com/json/${ip.ip}`);
+    let position = await position_resp.json();
+
+    return position;
+}
+
+async function get_position() {
+    let position = await function() {
+        return new Promise((resolve) => {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                resolve(position.coords);
+            }, (error) => {
+                resolve(false);
+            })
+        })
+    }();
+    
+    if(!position) {
+        position = await get_my_position_by_ip();
+        return {latitude: position.lat, longitude: position.lon};
+    }
+
+    return position;
 }

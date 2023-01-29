@@ -172,8 +172,6 @@ class UserService
         $new_user_email = NewUserEmail::where('token', '=', $data['activation_token'])
             ->where('created_at', '>', date("Y-m-d H:i:s", time() - 86400))
             ->first();
-            
-        // $new_user_email = $new_user_email->where('created_at', '>', date("Y-m-d H:i:s", time() - 86400))->first();
 
         if( $new_user_email) {
             $new_email = $new_user_email->email;
