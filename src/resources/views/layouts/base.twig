@@ -83,9 +83,11 @@
                             <div class="menu-link"><i class="fa-solid fa-sliders"></i> &nbsp Discovery Settings</div>
                         </a>
 
-                        <a href="{{ url_for('account_settings-get') }}">
-                            <div class="menu-link"><i class="fa-solid fa-gears"></i> &nbsp Account Settings</div>
-                        </a>
+                        {% if not getUser().is_google_auth %}
+                            <a href="{{ url_for('account_settings-get') }}">
+                                <div class="menu-link"><i class="fa-solid fa-gears"></i> &nbsp Account Settings</div>
+                            </a>
+                        {% endif %}
                         
                         <div class="menu-link"><i class="fa-solid fa-fire"></i> &nbsp Find a Match</div>
                         <div class="menu-link"><i class="fa-solid fa-users-viewfinder"></i> &nbsp My Matches</div>

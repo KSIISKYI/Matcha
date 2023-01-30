@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 use Rakit\Validation\Validator;
 
 use App\Models\{Gender, Interest, User, PendingUser};
-use App\Service\ProfileService;
+use App\Service\{ProfileService, UserService};
 
 class ProfileController extends Controller
 {
@@ -26,7 +26,6 @@ class ProfileController extends Controller
         $view = Twig::fromRequest($request);
         $user = $this->container->get('user');
         $context = $this->container->get('flash')->getMessages();
-        // print_r($context['data']);
 
         $context = array_merge(
             [
@@ -51,10 +50,10 @@ class ProfileController extends Controller
             $flash->addMessage('data', $data);
             $flash->addMessage('errors', $errors);
         } else {
+            UserService::updateUser($this->container->get('user'), $data);
             ProfileService::updateProfile($this->container, $data);
         }
-        print_r($errors);
+
         return $response;
-        // return $response->withStatus(302)->withHeader('Location', $this->container->get('router')->urlFor('profile_settings-get'));
     }
 }

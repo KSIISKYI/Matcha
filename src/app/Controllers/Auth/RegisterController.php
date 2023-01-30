@@ -7,7 +7,7 @@ use Slim\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 use App\Controllers\Controller;
-use App\Service\UserService;
+use App\Service\{UserService, GoogleAuthService};
 
 class RegisterController extends Controller
 {
@@ -15,6 +15,7 @@ class RegisterController extends Controller
     {
         $view = Twig::fromRequest($request);
         $context = $this->container->get('flash')->getMessages();
+        $context['google_code'] = GoogleAuthService::getAuthUrl();
         
         return $view->render($response, 'auth/signup.twig', $context);
     }

@@ -186,4 +186,10 @@ class UserService
 
         return false;
     }
+
+    static function updateUser(User $user, array $data)
+    {
+        $user->update($data);
+        $user->save();
+    }
 }

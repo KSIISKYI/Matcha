@@ -597,6 +597,7 @@ select:hover {
     color: grey;
     cursor: pointer;
     transition: all ease 0.3s;
+    z-index: 1;
 }
 
 #map:hover {
