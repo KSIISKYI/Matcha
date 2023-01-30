@@ -11,7 +11,7 @@ use App\Service\DiscoverySettingsService;
 
 class DiscoverySettingsController extends Controller
 {
-    function showSettings(Request $request, Response $response)
+    public function showSettings(Request $request, Response $response)
     {
         $view = Twig::fromRequest($request);
         $user = $this->container->get('user');
@@ -37,7 +37,7 @@ class DiscoverySettingsController extends Controller
         return $view->render($response, 'discovery_settings.twig', array_merge($context, ['csrf_tokens' => $tokenArray]));
     }
 
-    function updateSettings(Request $request, Response $response)
+    public function updateSettings(Request $request, Response $response)
     {
         $data = $request->getParsedBody();
         DiscoverySettingsService::update($this->container, $data);

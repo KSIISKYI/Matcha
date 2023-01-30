@@ -4,11 +4,9 @@ namespace App\Service;
 
 use DI\Container;
 
-use App\Models\DiscoverySetting;
-
 class DiscoverySettingsService
 {
-    static function update(Container $container, array $data)
+    public static function update(Container $container, array $data)
     {
         $discovery_settings = $container->get('user')->profile->discovery_settings;
         $data['gender_id'] = $data['gender'] ? $data['gender'] : null;

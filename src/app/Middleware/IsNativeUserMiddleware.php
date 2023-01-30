@@ -8,7 +8,7 @@ use Slim\Psr7\Response;
 
 class IsNativeUserMiddleware extends Middleware
 {
-    function __invoke(Request $request, RequestHandler $handler) {
+    public function __invoke(Request $request, RequestHandler $handler) {
         if (!$this->container->get('user')->is_google_auth) {
             $response = $handler->handle($request);
             return $response;

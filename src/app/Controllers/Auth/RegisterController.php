@@ -11,7 +11,7 @@ use App\Service\{UserService, GoogleAuthService};
 
 class RegisterController extends Controller
 {
-    function show_form(Request $request, Response $response)
+    public function show_form(Request $request, Response $response)
     {
         $view = Twig::fromRequest($request);
         $context = $this->container->get('flash')->getMessages();
@@ -20,7 +20,7 @@ class RegisterController extends Controller
         return $view->render($response, 'auth/signup.twig', $context);
     }
 
-    function register(Request $request, Response $response)
+    public function register(Request $request, Response $response)
     {
         $data = $request->getParsedBody();
         $validator = $this->container->get('validator');
@@ -38,7 +38,7 @@ class RegisterController extends Controller
         return $response->withStatus(302)->withHeader('Location', $this->container->get('router')->urlFor('signup-get'));
     }
 
-    function activate(Request $request, Response $response)
+    public function activate(Request $request, Response $response)
     {
         $data = $request->getParsedBody();
 

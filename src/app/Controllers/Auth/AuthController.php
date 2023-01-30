@@ -6,13 +6,12 @@ use Slim\Views\Twig;
 use Slim\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-use App\Models\{User, PendingUser};
 use App\Controllers\Controller;
 use App\Service\{UserService, GoogleAuthService};
 
 class AuthController extends Controller
 {
-    function show_form(Request $request, Response $response)
+    public function show_form(Request $request, Response $response)
     {
         $view = Twig::fromRequest($request);
         $context = $this->container->get('flash')->getMessages();
@@ -21,7 +20,7 @@ class AuthController extends Controller
         return $view->render($response, 'auth/signin.twig', $context);
     }
 
-    function login(Request $request, Response $response)
+    public function login(Request $request, Response $response)
     {
         $data = $request->getParsedBody();
         $flash = $this->container->get('flash');
@@ -36,7 +35,7 @@ class AuthController extends Controller
         return $response->withStatus(302)->withHeader('Location', $this->container->get('router')->urlFor('signin-get'));
     }
 
-    function logout(Request $request, Response $response)
+    public function logout(Request $request, Response $response)
     {
         $_SESSION = [];
 

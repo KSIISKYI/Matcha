@@ -9,7 +9,7 @@ use App\Models\ProfilePhoto;
 
 class ProfilePhotoService
 {
-    static function savePhoto(Request $request)
+    public static function savePhoto(Request $request)
     {
         $img_data = base64_decode($request->getParsedBody()['img_base64']);
         $img_name = 'profile_images/' . time() . random_int(10, 999) . '.jpeg';
@@ -18,7 +18,7 @@ class ProfilePhotoService
         return $img_name;
     }
 
-    static function create(Request $request, Container $container)
+    public static function create(Request $request, Container $container)
     {
         $img_name = self::savePhoto($request);
 
@@ -29,7 +29,7 @@ class ProfilePhotoService
         ]);
     }
 
-    static function remove($profile_photo_id)
+    public static function remove($profile_photo_id)
     {
         $profile_photo = ProfilePhoto::find($profile_photo_id);
         $img_path = $profile_photo->path;

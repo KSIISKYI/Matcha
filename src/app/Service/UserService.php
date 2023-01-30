@@ -4,14 +4,13 @@ namespace App\Service;
 
 use Rakit\Validation\Validator;
 use Illuminate\Database\Eloquent\Model;
-use DateTime;
 
 use App\Models\{User, PendingUser, NewUserEmail};
 use DI\Container;
 
 class UserService
 {
-    static function validateRegisterForm(Validator $validator, array $data)
+    public static function validateRegisterForm(Validator $validator, array $data)
     {
         $validation = $validator->make($data, [
             'username' => 'required|min:6|max:15|usernameAvailable|alpha_dash',
@@ -27,7 +26,7 @@ class UserService
         }
     }
 
-    static function validateLoginForm($data)
+    public static function validateLoginForm($data)
     {
         $user = User::where('username', $data['username'])->first();
         $res = [
@@ -44,7 +43,7 @@ class UserService
         return $res;
     }
 
-    static function validateAccountSettingsForm(Validator $validator, Container $container,  array $data)
+    public static function validateAccountSettingsForm(Validator $validator, Container $container,  array $data)
     {
         $user = $container->get('user');
         $errors = [];
@@ -98,7 +97,7 @@ class UserService
         return $errors;
     }
 
-    static function createUser($data)
+    public static function createUser($data)
     {
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         $user = User::create($data);
@@ -107,7 +106,7 @@ class UserService
         return $user;
     }
 
-    static function createPendingUser(Model $user)
+    public static function createPendingUser(Model $user)
     {
         $pending_user = PendingUser::create([
             'token' => sha1(uniqid(time(), true)),
@@ -117,7 +116,7 @@ class UserService
         return $pending_user;
     }
 
-    static function registerUser($user_data)
+    public static function registerUser($user_data)
     {
         $user = self::createUser($user_data);
         self::createPendingUser($user);
@@ -129,7 +128,7 @@ class UserService
         $_SESSION['user'] = $user->id;
     }
 
-    static function activateUser($data)
+    public static function activateUser($data)
     {
         if (isset($data['activation_token']) && PendingUser::where('token', $data['activation_token'])->count() > 0) {
             $pending_user = PendingUser::where('token', $data['activation_token'])->first();
@@ -144,7 +143,7 @@ class UserService
         return false;
     }
 
-    static function changePassword(User $user, $new_password)
+    public static function changePassword(User $user, $new_password)
     {
         $user->password = password_hash($new_password, PASSWORD_DEFAULT);
         $user->save();
@@ -158,7 +157,7 @@ class UserService
         self::changePassword($user, $new_pass);
     }
 
-    static function createNewEmailUser($user, $new_email)
+    public static function createNewEmailUser($user, $new_email)
     {
         return NewUserEmail::create([
             'token' => sha1(uniqid(time(), true)),
@@ -167,7 +166,7 @@ class UserService
         ]);
     }
 
-    static function changeEmail(array $data)
+    public static function changeEmail(array $data)
     {
         $new_user_email = NewUserEmail::where('token', '=', $data['activation_token'])
             ->where('created_at', '>', date("Y-m-d H:i:s", time() - 86400))
@@ -187,7 +186,7 @@ class UserService
         return false;
     }
 
-    static function updateUser(User $user, array $data)
+    public static function updateUser(User $user, array $data)
     {
         $user->update($data);
         $user->save();

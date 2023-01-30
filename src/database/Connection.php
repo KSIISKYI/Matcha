@@ -4,7 +4,7 @@ class Connection
 {
     private $connection;
 
-    function __construct(string $db_host, string $db_user, string $db_pass)
+    public function __construct(string $db_host, string $db_user, string $db_pass)
     {
         try {
             $this->connection = new PDO("mysql:host=$db_host", $db_user, $db_pass);
@@ -13,7 +13,7 @@ class Connection
         }
     }
 
-    function getConnection(): PDO
+    public function getConnection(): PDO
     {
         return $this->connection;
     }

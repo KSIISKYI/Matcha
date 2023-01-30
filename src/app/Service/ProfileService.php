@@ -7,7 +7,7 @@ use App\Models\{Profile, User, DiscoverySetting};
 
 class ProfileService
 {
-    static function createProfile(User $user)
+    public static function createProfile(User $user)
     {
         $discovery_settings = DiscoverySetting::create();
         $profile = Profile::create(['user_id' => $user->id, 'discovery_settings_id' => $discovery_settings->id]);
@@ -15,7 +15,7 @@ class ProfileService
         return $profile;
     }
 
-    static function validateProfileForm(Container $container, array $data)
+    public static function validateProfileForm(Container $container, array $data)
     {
         $validator = $container->get('validator');
 
@@ -39,7 +39,7 @@ class ProfileService
         }
     }
 
-    static function updateProfile(Container $container, array $data)
+    public static function updateProfile(Container $container, array $data)
     {
         $profile = $container->get('user')->profile;
         

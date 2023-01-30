@@ -8,7 +8,7 @@ use App\Models\{NewUserEmail, User};
 
 class MailService
 {
-    static function sendMail($to, $subject, $body)
+    public static function sendMail($to, $subject, $body)
     {
         $mail = new PHPMailer(true);
 
@@ -37,7 +37,7 @@ class MailService
         }
     }
 
-    static function sendActivationMail($user)
+    public static function sendActivationMail($user)
     {
         $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../public/mail_templates');
         $twig = new \Twig\Environment($loader);
@@ -47,7 +47,7 @@ class MailService
         self::sendMail($user->email, 'The Matcha', $body);
     }
 
-    static function sendRecoveryMail($user, $new_password)
+    public static function sendRecoveryMail($user, $new_password)
     {
         $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../public/mail_templates');
         $twig = new \Twig\Environment($loader);
@@ -57,7 +57,7 @@ class MailService
         self::sendMail($user->email, 'The Matcha', $body);
     }
 
-    static function sendChangeMail(User $user, NewUserEmail $new_email)
+    public static function sendChangeMail(User $user, NewUserEmail $new_email)
     {
         $loader = new \Twig\Loader\FilesystemLoader(__DIR__ . '/../../public/mail_templates');
         $twig = new \Twig\Environment($loader);
