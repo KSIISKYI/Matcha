@@ -12,7 +12,8 @@ $dbh->query('CREATE TABLE IF NOT EXISTS matcha.users (
     username VARCHAR(64) NOT NULL UNIQUE,
     email VARCHAR(64) NOT NULL UNIQUE,
     is_active BOOLEAN DEFAULT FALSE,
-    password VARCHAR(64) NOT NULL
+    is_google_auth BOOLEAN DEFAULT FALSE,
+    password VARCHAR(64)
 );');
 
 $dbh->query('CREATE TABLE matcha.pending_users (

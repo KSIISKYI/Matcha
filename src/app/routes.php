@@ -11,6 +11,7 @@ return function(App $app) {
     $app->group('', function(RouteCollectorProxy $group) {
         $group->get('/auth/signup', 'RegisterController:show_form')->setName('signup-get');
         $group->post('/auth/signup', 'RegisterController:register')->setName('signup-post');
+        $group->get('/auth/google', 'GoogleAuthController:authorize');
         $group->post('/auth/activate', 'RegisterController:activate');
         $group->get('/auth/signin', 'AuthController:show_form')->setName('signin-get');
         $group->post('/auth/signin', 'AuthController:login')->setName('signin-post');

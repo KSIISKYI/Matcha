@@ -9,6 +9,10 @@ use Slim\Views\TwigMiddleware;
 use Slim\Flash\Messages;
 use Slim\Csrf\Guard;
 
+// Looing for .env at the root directory
+$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../');
+$dotenv->load();
+
 $container = new Container;
 $settings = require_once __DIR__ . '/../conf/settings.php';
 $settings($container);
@@ -99,6 +103,12 @@ $container->set('UserController', function (Container $container) {
     // retrieve the 'view' from the container
     
     return new \App\Controllers\UserController($container);
+});
+
+$container->set('GoogleAuthController', function (Container $container) {
+    // retrieve the 'view' from the container
+    
+    return new \App\Controllers\GoogleAuthController($container);
 });
 
 $routes = require_once __DIR__ . '/../app/routes.php';

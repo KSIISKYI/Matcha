@@ -14,14 +14,14 @@ return function(Container $container) {
                 'template_path' => __DIR__ . '/../resources/views',
             ],
             'db' => [
-                'driver' => 'mysql',
-                'host' => '127.0.0.1',
-                'database' => 'matcha',
-                'username' => 'root',
-                'password' => 'root',
-                'charset' => 'utf8',
-                'collation' => 'utf8_unicode_ci',
-                'prefix' => '',
+                'driver' => $_ENV['DRIVER'],
+                'host' => $_ENV['HOST'],
+                'database' => $_ENV['DATABASE'],
+                'username' => $_ENV['USERNAME'],
+                'password' => $_ENV['PASSWORD'],
+                'charset' => $_ENV['CHARSET'],
+                'collation' => $_ENV['COLLATION'],
+                'prefix' => $_ENV['PREFIX'],
             ]
         ];
     });

@@ -8,7 +8,7 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 use App\Models\{User, PendingUser};
 use App\Controllers\Controller;
-use App\Service\UserService;
+use App\Service\{UserService, GoogleAuthService};
 
 class AuthController extends Controller
 {
@@ -16,6 +16,7 @@ class AuthController extends Controller
     {
         $view = Twig::fromRequest($request);
         $context = $this->container->get('flash')->getMessages();
+        $context['google_code'] = GoogleAuthService::getAuthUrl();
         
         return $view->render($response, 'auth/signin.twig', $context);
     }

@@ -16,3 +16,10 @@ function show_password(button, input) {
 show_pass_btns.forEach(btn => {
 	btn.addEventListener('click', show_password(btn, btn.nextSibling.nextSibling.nextSibling.nextSibling));
 })
+
+document.querySelector('#google_auth').addEventListener('click', function(e) {
+	e.preventDefault();
+	let link = e.target.getAttribute('value');
+
+	location.replace(link);
+})

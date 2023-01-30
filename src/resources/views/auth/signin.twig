@@ -15,7 +15,7 @@
             <div class="form_grid">
                 <div class="form_option">
                     <label for="user_name"><b>Username</b></label>
-                    <input type="text" placeholder="Enter Username" name="username" required value="{{ data.0.username }}"
+                    <input type="text" placeholder="Enter Username" name="username" value="{{ data.0.username }}"
                     {% if errors.0.username %}
                         style="background-color: #ffdada; border: 2px solid red;">
                         <div class="form_option_error">
@@ -31,7 +31,7 @@
                 <div class="form_option">
                     <i class="fa-regular fa-eye show_pass" id="show_pass"></i>
                     <label for="password"><b>Password</b></label>
-                    <input type="password" placeholder="Enter Password" name="password" required value="{{ data.0.password }}"
+                    <input type="password" placeholder="Enter Password" name="password" value="{{ data.0.password }}"
                     {% if errors.0.password %}
                         style="background-color: #ffdada; border: 2px solid red;">
                         <div class="form_option_error">
@@ -47,6 +47,21 @@
                 <div class="form_option">
                     <button type="submit" style="font-size: 17px; font-weight: bold;">Sign In</button>
                 </div>
+
+                <div class="form_option">
+                    <div style="display: flex; justify-content: center; position: relative;">
+                        <div style="width: 100%;border: 1px solid #ccc;position:relative;"></div>
+                        <p style="position: absolute;padding: 0 20px;top: -6px;background: white;color: grey;">OR</p>
+                    </div>
+                </div>
+
+                <div class="form_option">
+                    <button style="background: #dedede; font-size: 17px;font-weight: bold; color:#5c5c5c" id='google_auth' value="{{ google_code }}">
+                        <img src="{{ full_url_for('base_path') }}/img/google.png" style="width:25px; height: auto; margin-right: 5px; vertical-align: -6px">
+                        Continue with Google
+                    </button>
+                </div>
+
                 <div class="form_option">
                     <a class="forgot_pass" href="#" style="color: grey;">I forgot my password</a>
                 </div>
