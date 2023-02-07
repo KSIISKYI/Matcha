@@ -10,6 +10,7 @@ class Profile extends Model
 
     protected $guarded = ['id'];
     public $timestamps = false;
+    protected $with = array('user', 'profile_photos');
 
     public function user()
     {
@@ -34,5 +35,27 @@ class Profile extends Model
     public function discovery_settings()
     {
         return $this->belongsTo(DiscoverySetting::class);
+    }
+
+    public function reviewed_profiles()
+    {
+        return $this->belongsToMany(Profile::class, 'reviewed_profiles', 'viewer', 'reviewed')
+            ->withTimestamps()
+            ->wherePivot('created_at', '>', date("Y-m-d H:i:s", time() - 86400));
+    }
+
+    public function viewers()
+    {
+        return $this->belongsToMany(Profile::class, 'reviewed_profiles', 'reviewed', 'viewer')->withTimestamps();
+    }
+
+    public function interested_profiles()
+    {
+        return $this->belongsToMany(Profile::class, 'match_profiles', 'interesting', 'interested');
+    }
+
+    public function interesting_profiles()
+    {
+        return $this->belongsToMany(Profile::class, 'match_profiles', 'interested', 'interesting');
     }
 }

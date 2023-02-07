@@ -40,14 +40,12 @@ $dbh->query('CREATE TABLE matcha.genders (
 
 $dbh->query('CREATE TABLE matcha.discovery_settings (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    max_distance TINYINT DEFAULT 5,
+    max_distance TINYINT DEFAULT 100,
     age_min TINYINT DEFAULT 18,
-    age_max TINYINT DEFAULT 40,
+    age_max TINYINT DEFAULT 80,
     fame_rating_min TINYINT DEFAULT 0,
     fame_rating_max TINYINT DEFAULT 100,
     gender_id INT,
-    position_x FLOAT,
-    position_y FLOAT,
     CONSTRAINT discovery_settings_genders_fk FOREIGN KEY (gender_id) REFERENCES matcha.genders(id) ON DELETE SET NULL
 );');
 
@@ -59,9 +57,11 @@ $dbh->query('CREATE TABLE matcha.profiles (
     gender_id INT,
     user_id INT NOT NULL UNIQUE,
     discovery_settings_id INT UNIQUE,
-    age TINYINT,
-    fame_rating TINYINT,
+    age TINYINT DEFAULT 18,
+    fame_rating INT DEFAULT 0,
     last_activity DATETIME,
+    position_x FLOAT,
+    position_y FLOAT,
     instagram_link VARCHAR(64),
     twitter_link VARCHAR(64),
     facebook_link VARCHAR(64),
@@ -100,6 +100,24 @@ $dbh->query('CREATE TABLE matcha.discovery_setting_interest (
     CONSTRAINT interests_discovery_setting_interst_fk FOREIGN KEY (interest_id) REFERENCES matcha.interests(id) ON DELETE CASCADE
 );');
 
+$dbh->query('CREATE TABLE matcha.reviewed_profiles (
+	id INT auto_increment PRIMARY KEY,
+    viewer INT NOT NULL,
+    reviewed INT NOT NULL,
+    created_at DATETIME,
+    updated_at DATETIME,
+    CONSTRAINT reviewed_profiles_viewer_fk FOREIGN KEY (viewer) REFERENCES matcha.profiles(id) ON DELETE CASCADE,
+    CONSTRAINT reviewed_profiles_reviewed_fk FOREIGN KEY (reviewed) REFERENCES matcha.profiles(id) ON DELETE CASCADE
+);');
+
+$dbh->query('CREATE TABLE matcha.match_profiles (
+	id INT auto_increment PRIMARY KEY,
+    interested INT NOT NULL,
+    interesting INT NOT NULL,
+    CONSTRAINT match_profiles_interested_fk FOREIGN KEY (interested) REFERENCES matcha.profiles(id) ON DELETE CASCADE,
+    CONSTRAINT match_profiles_interesting_fk FOREIGN KEY (interesting) REFERENCES matcha.profiles(id) ON DELETE CASCADE
+);');
+
 
 
 // data
@@ -107,6 +125,56 @@ $dbh->query("INSERT INTO matcha.genders(gender)
     VALUES
         ('man'),
         ('women')
+");
+
+$dbh->query("
+    SET GLOBAL log_bin_trust_function_creators = 1;
+    use matcha;
+    
+    DELIMITER //
+    CREATE FUNCTION matcha.calcCrow( lat1 FLOAT, lon1 FLOAT, lat2 FLOAT, lon2 FLOAT ) RETURNS INTEGER
+    BEGIN
+    DECLARE R INT;
+    DECLARE dLat FLOAT;
+    DECLARE dLon FLOAT;
+    DECLARE a FLOAT;
+    DECLARE c FLOAT;
+    DECLARE d FLOAT;
+
+
+    SET R = 6371;
+    SET dLat = RADIANS(lat2 - lat1);
+    SET dLon = RADIANS(lon2 - lon1);
+    SET lat1 = RADIANS(lat1);
+    SET lat2 = RADIANS(lat2);
+
+    SET a = SIN(dLat / 2) * SIN(dLat / 2) + SIN(dLon / 2) * SIN(dLon/2) * COS(lat1) * COS(lat2);
+    SET c = 2 * ATAN2(SQRT(a), SQRT(1 - a)); 
+    SET d = R * c;
+
+    return d;
+    END//
+    DELIMITER ;"
+);
+
+$dbh->query("
+    DELIMITER //
+    CREATE FUNCTION matcha.calcFameRating(rating INT) returns INT
+    BEGIN
+    DECLARE one_percent FLOAT;
+    DECLARE min INT;
+    DECLARE max INT;
+    DECLARE result INT;
+    
+    SET min = (select min(fame_rating) from matcha.profiles);
+    SET max = (select max(fame_rating) from matcha.profiles);
+
+    SET one_percent = (max - min) / 100;
+    SET result = FLOOR((rating - min) / one_percent);
+
+    return result;
+    END//
+    DELIMITER ;
 ");
 
 $dbh->query("INSERT INTO matcha.interests(name)

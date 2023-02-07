@@ -1,24 +1,3 @@
-// let modal = document.querySelector('.modal');
-// let modal_content = modal.querySelector('.modal-content');
-// let close_btn = modal.querySelector('.close');
-
-
-// for(let i = 0; i < images.length; i++) {
-// 	images[i].addEventListener('click', function(e) {
-// 		modal_content.querySelector('img').src = e.target.src;
-// 		modal.style.display = 'flex';
-// 	})
-// }
-
-// modal.onclick = function() {
-// 	modal.style.display = 'none';
-// }
-
-// close_btn.onclick = function() {
-// 	modal.style.display = 'none';
-// }
-
-
 let forgot_pass_btn = document.querySelector('.forgot_pass');
 
 let modal = document.querySelector('.modal');

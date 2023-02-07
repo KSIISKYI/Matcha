@@ -5,7 +5,7 @@ declare(strict_types=1);
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
-use App\Middleware\{GuestMiddleware, AuthenticateMiddleware, IsProfilePhotoCreatorMiddleware, IsNativeUserMiddleware};
+use App\Middleware\{GuestMiddleware, AuthenticateMiddleware, IsProfilePhotoCreatorMiddleware, IsNativeUserMiddleware, IsMyProfileMiddleware};
 
 return function(App $app) {
     $app->group('', function(RouteCollectorProxy $group) {
@@ -19,7 +19,9 @@ return function(App $app) {
     })->add(new GuestMiddleware($app->getContainer()));
 
     $app->group('', function(RouteCollectorProxy $group) use($app) {
-        $group->get('/profile', 'ProfileController:show')->setName('profile-index');
+        $group->get('/profiles/my', 'ProfileController:showMe')->setName('profile-index');
+        $group->get('/profiles/{profile_id}', 'ProfileController:show')->setName('profile-show')->add(new IsMyProfileMiddleware($app->getContainer()));
+        $group->get('/profiles', 'ProfileController:getProfiles');
         $group->get('/auth/signout', 'AuthController:logout')->setName('signout-get');
 
         $group->get('/profile/settings', 'ProfileController:showSettings')->setName('profile_settings-get');
@@ -31,6 +33,9 @@ return function(App $app) {
 
         $group->get('/discovery_settings', 'DiscoverySettingsController:showSettings')->setName('discovery_settings-get')->add('csrf');
         $group->post('/discovery_settings', 'DiscoverySettingsController:updateSettings')->setName('discovery_settings-post')->add('csrf');
+
+        $group->get('/find_match', 'MatchController:index')->setName('match-index');
+        $group->post('/find_match/{profile_id}', 'MatchController:checkForMatch');
     })->add(new AuthenticateMiddleware($app->getContainer())); 
 
     $app->group('', function(RouteCollectorProxy $group) use($app) {

@@ -1,55 +1,102 @@
 {% extends 'layouts/base.twig' %}
 
 {% block headers %}
-
 <script defer src="http://localhost:8000/js/slider.js"></script>
-<script defer src="http://localhost:8000/js/modal.js"></script>
-
 {% endblock %}
 
 
 {% block content %}
 
-<div class="modal">
+{# <div class="modal">
     <span class="close">&times;</span>
     <div class="modal-content"><img id="img_select"></div>
-</div>
+</div> #}
 
 <div class="container">
     <div class="profile">
-        <div class="slider">
-            {% if profile_photos.count() > 0 %}
-                <div class="slider-line">
-                    {% for profile_photo in profile_photos %}
-                        <img src="http://localhost:8000/img/{{ profile_photo.path }}" value="{{ profile_photo.id }}">
+        <div class="form_grid">
+            {# {% if profile.id != getUser().profile.id %}
+            <div class="form_option">
+                <button style="width:30%">Back</button>
+            </div>
+            {% endif %} #}
+            
+            <div class="form_option">
+                <div class="slider">
+                {% if profile.profile_photos.count() > 0 %}
+                    <div class="slider-line">
+                        {% for profile_photo in profile.profile_photos %}
+                            <img src="http://localhost:8000/img/{{ profile_photo.path }}" value="{{ profile_photo.id }}">
+                        {% endfor %}
+                    </div>
+                    {% if profile.profile_photos.count() > 1 %}
+                        <i class="fa-solid fa-angle-left" id="slider-prev" style="top: 47%;"></i>
+                        <i class="fa-solid fa-angle-right" id="slider-next" style="top: 47%; right: 0;"></i>
+                        <div class="slider-pointer"></div>
+                    {% endif %}
+                {% else %}
+                    <div class="slider-line">
+                        <img src="http://localhost:8000/img/def_avatar.jpeg">
+                    </div>
+                {% endif %}
+                </div>
+            </div>
+
+            <div class="form_option">
+                <div class="username">
+                    {{ profile.user.username }}
+                    {% if profile.age %}
+                        , {{ profile.age }}
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if profile.id != getUser().profile.id %}
+                <div class="form_option" style="color:grey;">
+                    <div id="last_activity" value="{{ profile.last_activity }}"></div>
+                    <br>
+                    <p><i class="fa-solid fa-location-dot"></i> {{ profile.distance }} kilometer(s) from you</p>
+                </div>
+            {% endif %}
+            
+            <hr>
+
+            <div class="form_option">
+                <h3>About</h3>
+                {% if profile.about_me %}
+                    <p style="color:grey; margin: 10px 0">{{ profile.about_me }}</p>
+                {% else %}
+                    <p style="color:grey; margin: 10px 0">Nothing</p>
+                {% endif %}   
+            </div>
+
+            <div class="form_option">
+                <h3>Interests</h3>
+                <div class="tags">
+                    {% for tag in profile.interests %}
+                        <div class="tag">{{ tag.name }}</div>
                     {% endfor %}
                 </div>
-                {% if profile_photos.count() > 1 %}
-                    <i class="fa-solid fa-angle-left" id="slider-prev" style="top: 47%;"></i>
-                    <i class="fa-solid fa-angle-right" id="slider-next" style="top: 47%; right: 0;"></i>
-                    <div class="slider-pointer"></div>
-                {% endif %}
-            {% else %}
-                <div class="slider-line">
-                    <img src="http://localhost:8000/img/def_avatar.jpeg">
+            </div>
+
+            <div class="form_option">
+                <h3>Popularity</h3>
+                <div class="populary">
+                    <div class="populary-line" style="width:{{ profile.fame_rating_percent }}%"></div>
+                </div>
+            </div>
+
+            {% if profile.id != getUser().profile.id %}
+                <div class="form_option" style="display: flex; justify-content: end;">
+                    <button style="width: 30%; background-color: #ff0000a3; font-weight: bold;">Block</button>
                 </div>
             {% endif %}
-        </div>
-        <div class="username">
-            {{ user.username }}, 22
-        </div>
-        <div class="aboutMe">
-            <p>About Me</p>
-            {% if user.profile.about_me %}
-                {{ user.profile.about_me }}
-            {% else %}
-                Nothing
+
+            {% if profile.id == getUser().profile.id %}
+                <hr>
+                <a href="{{ url_for('profile_settings-get') }}"><button>Edit profile</button></a>
             {% endif %}
-
-        </div>
-
-        <a href="{{ url_for('profile_settings-get') }}"><button>Edit profile</button></a>
-                
+        </div>                
     </div>
 </div>
 

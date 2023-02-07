@@ -101,5 +101,9 @@ $container->set('DiscoverySettingsController', function (Container $container) {
     return new \App\Controllers\DiscoverySettingsController($container);
 });
 
+$container->set('MatchController', function (Container $container) {
+    return new \App\Controllers\MatchController($container);
+});
+
 $routes = require_once __DIR__ . '/../app/routes.php';
 $routes($app);

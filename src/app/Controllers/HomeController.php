@@ -11,6 +11,17 @@ class HomeController extends Controller
 {
     public function index(Request $request, Response $response)
     {
-        return $response;
+        $profile = Profile::all()->first();
+        // // var_dump($profile);
+
+        // $profile->reviewed_profiles()->attach(['reviewed' => 2]);
+
+        echo '<pre>';
+        print_r($profile->interesting_profiles->toArray());
+        echo '</pre>';
+
+
+
+        // return $response;
     }
 }

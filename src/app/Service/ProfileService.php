@@ -2,8 +2,9 @@
 namespace App\Service;
 
 use DI\Container;
+use Illuminate\Database\Capsule\Manager as Capsule;
 
-use App\Models\{Profile, User, DiscoverySetting};
+use App\Models\{Profile, User, DiscoverySetting, ReviewedProfile};
 
 class ProfileService
 {
@@ -55,5 +56,63 @@ class ProfileService
         ]);
 
         $profile->interests()->sync($data['interests']);
+    }
+
+    public static function getProfileWithPopularity(Container $container, $profile_id)
+    {
+        $my_profile = $container->get('user')->profile;
+        $profile = Profile::selectRaw('*, 
+                calcFameRating(fame_rating) as fame_rating_percent, 
+                calcCrow(position_x, position_y, ?, ?) as distance',
+            [$my_profile->position_x, $my_profile->position_y]
+        )->find($profile_id);
+
+        return $profile;
+    }
+
+    public static function getSuitableProfiles(Container $container)
+    {
+        $user = $container->get('user');
+        $my_profile = $user->profile;
+
+        $suitable_profiles = Profile::from('profiles as p')
+            ->selectRaw("
+                p.*, 
+                calcCrow(position_x, position_y, ?, ?) as distance,
+                calcFameRating(fame_rating) as fame_rating_percent",
+                [$my_profile->position_x, $my_profile->position_y]
+            )
+            ->join('matcha.interest_profile as i_p', 'p.id', '=', 'i_p.profile_id')
+            ->whereNotIn('user_id', [$user->id])
+            ->whereRaw('
+                (select max_distance from matcha.profiles AS pp
+                join matcha.discovery_settings as d on (pp.discovery_settings_id = d.id)
+                where pp.id = ?) > (select calcCrow(p.position_x, p.position_y, ppp.position_x, ppp.position_y) from matcha.profiles as ppp where ppp.id = 1)',
+                [$my_profile->id]
+            )
+            ->whereRaw('calcFameRating(fame_rating) between ? and ?', [
+                    $my_profile->discovery_settings->fame_rating_min, 
+                    $my_profile->discovery_settings->fame_rating_max
+                ]
+            )
+            ->whereBetween('age', [$my_profile->discovery_settings->age_min, $my_profile->discovery_settings->age_max])
+            ->whereNotIn('p.id', $my_profile->reviewed_profiles->pluck('id'))
+            ->whereNotIn('p.id', $my_profile->interesting_profiles->pluck('id'))
+            ->groupBy('p.user_id');
+
+        if ($interests = $my_profile->discovery_settings->interests->pluck('id')->toArray()) {
+            $suitable_profiles = $suitable_profiles->whereIn('i_p.interest_id', $interests); 
+        }
+
+        if (!is_null($gender = $my_profile->discovery_settings->gender_id)) {
+            $suitable_profiles = $suitable_profiles->whereRaw('(gender_id = ? or gender_id is null)', [$gender]);
+        }
+        
+        $suitable_profiles = $suitable_profiles->orderByRaw('distance, count(*) desc, fame_rating_percent desc')
+            ->take(10)
+            ->get()
+            ->toArray();
+
+        return $suitable_profiles;
     }
 }

@@ -107,14 +107,6 @@ function cropp_img(raw_img, cropped_img) {
 	cropped_img.src = canvas.toDataURL('image/jpeg', 1.0);
 }
 
-
-function htmlToElement(html) {
-    var template = document.createElement('template');
-    html = html.trim(); // Never return a text node of whitespace as the result
-    template.innerHTML = html;
-    return template.content.firstChild;
-}
-
 function remove_img() {
 	let new_el_id = Math.random();
 	let new_el = htmlToElement(`<div class="add_img">\

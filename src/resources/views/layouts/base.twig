@@ -17,31 +17,32 @@
     <script src="https://kit.fontawesome.com/600e38d2f0.js" crossorigin="anonymous"></script>
 </head>
 <body>
-
-    <div class="modal">
-        <div class="modal-content">
-            <div class="modal_message close">
-                <form id="reset_password">
-                    <div class="form_grid">
-                        <div class="form_option">
-                            <h2>Reset your password</h2>
-                            <hr>
+    {% block modal %}
+        <div class="modal">
+            <div class="modal-content">
+                <div class="modal_message close">
+                    <form id="reset_password">
+                        <div class="form_grid">
+                            <div class="form_option">
+                                <h2>Reset your password</h2>
+                                <hr>
+                            </div>
+                            <div class="option">
+                                We can send new randomly genereted password on your email.
+                            </div>
+                            <div class="form_option">
+                                <label for="email"><b>Email</b></label>
+                                <input type="text" placeholder="Enter Email" name="email" required value={{ getUser().email }}>
+                            </div>
+                            <div class="form_option">
+                                <button type="submit" style="font-size: 17px;font-weight: bold;">Send Password</button>
+                            </div>
                         </div>
-                        <div class="option">
-                            We can send new randomly genereted password on your email.
-                        </div>
-                        <div class="form_option">
-                            <label for="email"><b>Email</b></label>
-                            <input type="text" placeholder="Enter Email" name="email" required value={{ getUser().email }}>
-                        </div>
-                        <div class="form_option">
-                            <button type="submit" style="font-size: 17px;font-weight: bold;">Send Password</button>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
-    </div>
+    {% endblock %}
 
     <div class="page">
         
@@ -88,8 +89,10 @@
                                 <div class="menu-link"><i class="fa-solid fa-gears"></i> &nbsp Account Settings</div>
                             </a>
                         {% endif %}
+                        <a href="{{ url_for('match-index') }}">
+                            <div class="menu-link"><i class="fa-solid fa-fire"></i> &nbsp Find a Match</div>
+                        </a>
                         
-                        <div class="menu-link"><i class="fa-solid fa-fire"></i> &nbsp Find a Match</div>
                         <div class="menu-link"><i class="fa-solid fa-users-viewfinder"></i> &nbsp My Matches</div>
                         <div class="menu-link"><i class="fa-solid fa-calendar"></i> &nbsp Activity Log</div>
                     {% else %}
