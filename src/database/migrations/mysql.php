@@ -127,55 +127,52 @@ $dbh->query("INSERT INTO matcha.genders(gender)
         ('women')
 ");
 
-$dbh->query("
-    SET GLOBAL log_bin_trust_function_creators = 1;
-    use matcha;
-    
-    DELIMITER //
+$dbh->exec("
     CREATE FUNCTION matcha.calcCrow( lat1 FLOAT, lon1 FLOAT, lat2 FLOAT, lon2 FLOAT ) RETURNS INTEGER
-    BEGIN
-    DECLARE R INT;
-    DECLARE dLat FLOAT;
-    DECLARE dLon FLOAT;
-    DECLARE a FLOAT;
-    DECLARE c FLOAT;
-    DECLARE d FLOAT;
+        BEGIN
+        DECLARE R INT;
+        DECLARE dLat FLOAT;
+        DECLARE dLon FLOAT;
+        DECLARE a FLOAT;
+        DECLARE c FLOAT;
+        DECLARE d FLOAT;
 
 
-    SET R = 6371;
-    SET dLat = RADIANS(lat2 - lat1);
-    SET dLon = RADIANS(lon2 - lon1);
-    SET lat1 = RADIANS(lat1);
-    SET lat2 = RADIANS(lat2);
+        SET R = 6371;
+        SET dLat = RADIANS(lat2 - lat1);
+        SET dLon = RADIANS(lon2 - lon1);
+        SET lat1 = RADIANS(lat1);
+        SET lat2 = RADIANS(lat2);
 
-    SET a = SIN(dLat / 2) * SIN(dLat / 2) + SIN(dLon / 2) * SIN(dLon/2) * COS(lat1) * COS(lat2);
-    SET c = 2 * ATAN2(SQRT(a), SQRT(1 - a)); 
-    SET d = R * c;
+        SET a = SIN(dLat / 2) * SIN(dLat / 2) + SIN(dLon / 2) * SIN(dLon/2) * COS(lat1) * COS(lat2);
+        SET c = 2 * ATAN2(SQRT(a), SQRT(1 - a)); 
+        SET d = R * c;
 
-    return d;
-    END//
-    DELIMITER ;"
+        return d;
+        END"
 );
 
-$dbh->query("
-    DELIMITER //
+$dbh->exec("
     CREATE FUNCTION matcha.calcFameRating(rating INT) returns INT
-    BEGIN
-    DECLARE one_percent FLOAT;
-    DECLARE min INT;
-    DECLARE max INT;
-    DECLARE result INT;
-    
-    SET min = (select min(fame_rating) from matcha.profiles);
-    SET max = (select max(fame_rating) from matcha.profiles);
+        BEGIN
+        DECLARE one_percent FLOAT;
+        DECLARE min INT;
+        DECLARE max INT;
+        DECLARE result INT;
+            
+        SET min = (select min(fame_rating) from matcha.profiles);
+        SET max = (select max(fame_rating) from matcha.profiles);
 
-    SET one_percent = (max - min) / 100;
-    SET result = FLOOR((rating - min) / one_percent);
+        IF rating = min THEN
+            return 0;
+        END IF;
 
-    return result;
-    END//
-    DELIMITER ;
-");
+        SET one_percent = (max - min) / 100;
+        SET result = FLOOR((rating - min) / one_percent);
+
+        return result;
+        END"
+);
 
 $dbh->query("INSERT INTO matcha.interests(name)
     VALUES

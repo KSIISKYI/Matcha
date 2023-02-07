@@ -82,7 +82,7 @@ class ProfileService
                 calcFameRating(fame_rating) as fame_rating_percent",
                 [$my_profile->position_x, $my_profile->position_y]
             )
-            ->join('matcha.interest_profile as i_p', 'p.id', '=', 'i_p.profile_id')
+            ->leftJoin('matcha.interest_profile as i_p', 'p.id', '=', 'i_p.profile_id')
             ->whereNotIn('user_id', [$user->id])
             ->whereRaw('
                 (select max_distance from matcha.profiles AS pp
