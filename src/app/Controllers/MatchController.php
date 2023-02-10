@@ -6,7 +6,9 @@ use Slim\Views\Twig;
 use Slim\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
-use App\Service\MatchService;
+use App\Service\{MatchService, Paginator, ProfileService};
+
+use function GuzzleHttp\Promise\is_settled;
 
 class MatchController extends Controller
 {
@@ -32,5 +34,27 @@ class MatchController extends Controller
         }
 
         return $response;
+    }
+
+    public function getMyMatches(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+        $view = Twig::fromRequest($request);
+    
+        $paginator = new Paginator(
+            ProfileService::getMatchProfiles($this->container),
+            4
+        );
+
+        $context = [
+            'profiles' => $paginator->getData(isset($data['page']) ? $data['page'] : 1),
+            'page_obj' => $paginator->getPageObj(isset($data['page']) ? $data['page'] : 1)
+        ];
+
+        // echo '<pre>';
+        // print_r($context);
+        // echo '</pre>';
+
+        return $view->render($response, 'profile/profiles.twig', $context);
     }
 }

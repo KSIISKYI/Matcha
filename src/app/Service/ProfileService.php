@@ -5,6 +5,8 @@ use DI\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
 
 use App\Models\{Profile, User, DiscoverySetting, ReviewedProfile};
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Carbon;
 
 class ProfileService
 {
@@ -58,6 +60,44 @@ class ProfileService
         $profile->interests()->sync($data['interests']);
     }
 
+    public static function getMatchProfiles(Container $container)
+    {
+        $my_profile = $container->get('user')->profile;
+        $profile_ids = $my_profile->interesting_profiles->intersect($my_profile->interested_profiles)->pluck('id')->reverse()->toArray();
+        $profiles = [];
+
+        foreach($profile_ids as $profile_id) {
+            $profile = self::getProfileWithPopularity($container, $profile_id);
+            $profile->match = true;
+            $profiles[] = $profile->toArray();
+        }
+
+        return $profiles;
+    }
+
+    public static function getActivityLog(Container $container)
+    {
+        $my_profile = $container->get('user')->profile;
+        $profile_ids = $my_profile->activity_log->pluck('id')->toArray();
+        $match_profile_ids = $my_profile->interesting_profiles->intersect($my_profile->interested_profiles)->pluck('id')->reverse()->toArray();
+        $interesting_profile_ids = $my_profile->interesting_profiles->pluck('id')->toArray();
+        $profiles = [];
+
+        foreach($profile_ids as $profile_id) {
+            $profile = self::getProfileWithPopularity($container, $profile_id);
+            
+            if (in_array($profile->id, $match_profile_ids)) {
+                $profile->match = true;
+            } elseif (in_array($profile->id, $interesting_profile_ids)) {
+                $profile->liked = true;
+            }
+
+            $profiles[] = $profile->toArray();
+        }
+
+        return $profiles;
+    }
+
     public static function getProfileWithPopularity(Container $container, $profile_id)
     {
         $my_profile = $container->get('user')->profile;
@@ -66,6 +106,9 @@ class ProfileService
                 calcCrow(position_x, position_y, ?, ?) as distance',
             [$my_profile->position_x, $my_profile->position_y]
         )->find($profile_id);
+        $profile->is_blocked = in_array($profile->id, $my_profile->blocked_profiles->pluck('id')->toArray());
+        $profile->is_blocker = in_array($profile->id, $my_profile->blockers->pluck('id')->toArray());
+        $profile->is_reported = in_array($profile->id, $my_profile->fake_profiles->pluck('id')->toArray());
 
         return $profile;
     }
@@ -84,6 +127,8 @@ class ProfileService
             )
             ->leftJoin('matcha.interest_profile as i_p', 'p.id', '=', 'i_p.profile_id')
             ->whereNotIn('user_id', [$user->id])
+            ->whereNotIn('p.id', $my_profile->blockers->merge($my_profile->blocked_profiles)->pluck('id'))
+            ->whereNotIn('p.id', $my_profile->fake_profiles->pluck('id'))
             ->whereRaw('
                 (select max_distance from matcha.profiles AS pp
                 join matcha.discovery_settings as d on (pp.discovery_settings_id = d.id)
@@ -114,5 +159,56 @@ class ProfileService
             ->toArray();
 
         return $suitable_profiles;
+    }
+
+    public static function addToActivityLog(Container $container, $profile_id)
+    {
+        $my_profile = $container->get('user')->profile;
+        $last_activity = $my_profile->activity_log->where('id', '=', $profile_id)->first();
+
+        $now = Carbon::now()->subHour();
+
+        if (!$last_activity || $now->gt($last_activity->pivot->created_at)) {
+            $my_profile->activity_log()->attach($profile_id);
+        }
+    }
+
+    public static function blockProfile(Container $container, $data)
+    {
+        $my_profile = $container->get('user')->profile;
+
+        try { 
+            $my_profile->blocked_profiles()->syncWithoutDetaching(['blocked' => $data['profile_id']]);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function unblockProfile(Container $container, $data)
+    {
+        $my_profile = $container->get('user')->profile;
+
+        try { 
+            $my_profile->blocked_profiles()->detach(['blocked' => $data['profile_id']]);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public static function reportFakeProfile(Container $container, $data)
+    {
+        $my_profile = $container->get('user')->profile;
+
+        try { 
+            $my_profile->fake_profiles()->syncWithoutDetaching(['fake_profile' => $data['profile_id']]);
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -36,6 +36,13 @@ return function(App $app) {
 
         $group->get('/find_match', 'MatchController:index')->setName('match-index');
         $group->post('/find_match/{profile_id}', 'MatchController:checkForMatch');
+        $group->get('/my_matches', 'MatchController:getMyMatches')->setName('my_matches-get');
+
+        $group->get('/activity_log', 'ProfileController:getActivityLog')->setName('activity_log-get');
+
+        $group->get('/block_profile/{profile_id}', 'ProfileController:blockProfile')->setName('block_profile');
+        $group->get('/unblock_profile/{profile_id}', 'ProfileController:unblockProfile')->setName('unblock_profile');
+        $group->get('/report_fake_profile/{profile_id}', 'ProfileController:reportFakeProfile')->setName('report_fake_profile');
     })->add(new AuthenticateMiddleware($app->getContainer())); 
 
     $app->group('', function(RouteCollectorProxy $group) use($app) {

@@ -58,4 +58,24 @@ class Profile extends Model
     {
         return $this->belongsToMany(Profile::class, 'match_profiles', 'interested', 'interesting');
     }
+
+    public function activity_log()
+    {
+        return $this->belongsToMany(Profile::class, 'activity_log', 'viewer', 'reviewed')->orderByPivot('created_at', 'desc')->withTimestamps();
+    }
+
+    public function blocked_profiles()
+    {
+        return $this->belongsToMany(Profile::class, 'blocked_profiles', 'blocker', 'blocked');
+    }
+
+    public function blockers()
+    {
+        return $this->belongsToMany(Profile::class, 'blocked_profiles', 'blocked', 'blocker');
+    }
+
+    public function fake_profiles()
+    {
+        return $this->belongsToMany(Profile::class, 'fake_profile_reports', 'reporter', 'fake_profile');
+    }
 }

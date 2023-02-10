@@ -34,7 +34,7 @@ function getDiffTime(date) {
 }
 
 for (link of burger_menu_links) {
-	if (location.href === link.href) {
+	if (location.protocol + '//' + location.host + location.pathname === link.href) {
 		link.querySelector('.menu-link').classList.add('selected');
 		break;
 	}

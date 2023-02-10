@@ -92,9 +92,14 @@
                         <a href="{{ url_for('match-index') }}">
                             <div class="menu-link"><i class="fa-solid fa-fire"></i> &nbsp Find a Match</div>
                         </a>
+
+                        <a href="{{ url_for('my_matches-get') }}">
+                            <div class="menu-link"><i class="fa-solid fa-users-viewfinder"></i> &nbsp My Matches</div>
+                        </a>
                         
-                        <div class="menu-link"><i class="fa-solid fa-users-viewfinder"></i> &nbsp My Matches</div>
-                        <div class="menu-link"><i class="fa-solid fa-calendar"></i> &nbsp Activity Log</div>
+                        <a href="{{ url_for('activity_log-get') }}">
+                            <div class="menu-link"><i class="fa-solid fa-calendar"></i> &nbsp Activity Log</div>
+                        </a>
                     {% else %}
                          <a href="{{ full_url_for('signin-get') }}">
                             <div class="menu-link"><i class="fa-solid fa-right-to-bracket"></i> &nbsp Sign In </div>
@@ -129,7 +134,7 @@
                             <span class="amount" style="background-color:#C14D4B"><b>6</b></span>
                         </i>
                     </a>
-                    <a href="{{ url_for('signout-get') }}" class="nav-link" style="font-size:20px;">
+                    <a href="{{ url_for('signout-get') }}" class="nav-link menu-link" style="font-size:20px;">
                         Logout
                     </a>
                 {% else %}

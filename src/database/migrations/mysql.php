@@ -118,6 +118,32 @@ $dbh->query('CREATE TABLE matcha.match_profiles (
     CONSTRAINT match_profiles_interesting_fk FOREIGN KEY (interesting) REFERENCES matcha.profiles(id) ON DELETE CASCADE
 );');
 
+$dbh->query('CREATE TABLE matcha.activity_log (
+	id INT auto_increment PRIMARY KEY,
+    viewer INT NOT NULL,
+    reviewed INT NOT NULL,
+    created_at DATETIME,
+    updated_at DATETIME,
+    CONSTRAINT activity_log_viewer_fk FOREIGN KEY (viewer) REFERENCES matcha.profiles(id) ON DELETE CASCADE,
+    CONSTRAINT activity_log_reviewed_fk FOREIGN KEY (reviewed) REFERENCES matcha.profiles(id) ON DELETE CASCADE
+);');
+
+$dbh->query('CREATE TABLE matcha.blocked_profiles (
+	id INT auto_increment PRIMARY KEY,
+    blocker INT NOT NULL,
+    blocked INT NOT NULL,
+    CONSTRAINT blocked_profiles_blocker_fk FOREIGN KEY (blocker) REFERENCES matcha.profiles(id) ON DELETE CASCADE,
+    CONSTRAINT blocked_profiles_blocked_fk FOREIGN KEY (blocked) REFERENCES matcha.profiles(id) ON DELETE CASCADE
+);');
+
+$dbh->query('CREATE TABLE matcha.fake_profile_reports (
+	id INT auto_increment PRIMARY KEY,
+    reporter INT NOT NULL,
+    fake_profile INT NOT NULL,
+    CONSTRAINT fake_profile_reports_reporter_fk FOREIGN KEY (reporter) REFERENCES matcha.profiles(id) ON DELETE CASCADE,
+    CONSTRAINT fake_profile_reports_fake_profile_fk FOREIGN KEY (fake_profile) REFERENCES matcha.profiles(id) ON DELETE CASCADE
+);');
+
 
 
 // data
@@ -126,6 +152,8 @@ $dbh->query("INSERT INTO matcha.genders(gender)
         ('man'),
         ('women')
 ");
+
+$dbh->exec("SET GLOBAL log_bin_trust_function_creators = 1;");
 
 $dbh->exec("
     CREATE FUNCTION matcha.calcCrow( lat1 FLOAT, lon1 FLOAT, lat2 FLOAT, lon2 FLOAT ) RETURNS INTEGER

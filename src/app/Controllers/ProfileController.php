@@ -7,7 +7,7 @@ use Slim\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 
 use App\Models\{Gender, Interest, Profile};
-use App\Service\{ProfileService, UserService};
+use App\Service\{ProfileService, UserService, Paginator};
 
 class ProfileController extends Controller
 {
@@ -66,6 +66,7 @@ class ProfileController extends Controller
 
     public function show(Request $request, Response $response, array $args)
     {
+        ProfileService::addToActivityLog($this->container, $args['profile_id']);
         $profile = ProfileService::getProfileWithPopularity($this->container, $args['profile_id']);
         $view = Twig::fromRequest($request);
         
@@ -85,6 +86,53 @@ class ProfileController extends Controller
 
         $response->withHeader('Content-Type', 'application/json');
         $response->getBody()->write(json_encode($profiles));
+
+        return $response;
+    }
+
+    public function getActivityLog(Request $request, Response $response)
+    {
+        $data = $request->getQueryParams();
+        $profile = $this->container->get('user')->profile;
+        $profiles = ProfileService::getActivityLog($this->container);
+        $view = Twig::fromRequest($request);
+    
+        $paginator = new Paginator(
+            $profiles,
+            4
+        );
+
+        $context = [
+            'profiles' => $paginator->getData(isset($data['page']) ? $data['page'] : 1),
+            'page_obj' => $paginator->getPageObj(isset($data['page']) ? $data['page'] : 1)
+        ];
+
+        return $view->render($response, 'profile/profiles.twig', $context);
+    }
+
+    public function blockProfile(Request $request, Response $response, $args)
+    {
+        if (!ProfileService::blockProfile($this->container, $args)) {
+            return $response->withStatus(400, 'Bad Request');
+        }
+
+        return $response;
+    }
+
+    public function unblockProfile(Request $request, Response $response, $args)
+    {
+        if (!ProfileService::unblockProfile($this->container, $args)) {
+            return $response->withStatus(400, 'Bad Request');
+        }
+
+        return $response;
+    }
+
+    public function reportFakeProfile(Request $request, Response $response, $args)
+    {
+        if (!ProfileService::reportFakeProfile($this->container, $args)) {
+            return $response->withStatus(400, 'Bad Request');
+        }
 
         return $response;
     }
