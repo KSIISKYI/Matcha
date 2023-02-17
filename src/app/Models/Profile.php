@@ -78,4 +78,9 @@ class Profile extends Model
     {
         return $this->belongsToMany(Profile::class, 'fake_profile_reports', 'reporter', 'fake_profile');
     }
+
+    public function participants()
+    {
+        return $this->hasMany(Participant::class);
+    }
 }

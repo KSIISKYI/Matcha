@@ -8,8 +8,6 @@ use Psr\Http\Message\ServerRequestInterface as Request;
 
 use App\Service\{MatchService, Paginator, ProfileService};
 
-use function GuzzleHttp\Promise\is_settled;
-
 class MatchController extends Controller
 {
     public function index(Request $request, Response $response)
@@ -50,10 +48,6 @@ class MatchController extends Controller
             'profiles' => $paginator->getData(isset($data['page']) ? $data['page'] : 1),
             'page_obj' => $paginator->getPageObj(isset($data['page']) ? $data['page'] : 1)
         ];
-
-        // echo '<pre>';
-        // print_r($context);
-        // echo '</pre>';
 
         return $view->render($response, 'profile/profiles.twig', $context);
     }

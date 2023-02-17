@@ -144,6 +144,33 @@ $dbh->query('CREATE TABLE matcha.fake_profile_reports (
     CONSTRAINT fake_profile_reports_fake_profile_fk FOREIGN KEY (fake_profile) REFERENCES matcha.profiles(id) ON DELETE CASCADE
 );');
 
+$dbh->query('CREATE TABLE matcha.chats (
+    id INT auto_increment PRIMARY KEY,
+    created_at DATETIME,
+    updated_at DATETIME
+);');
+
+$dbh->query('CREATE TABLE matcha.participants (
+    id INT auto_increment PRIMARY KEY,
+    chat_id INT NOT NULL,
+    profile_id INT NOT NULL,
+    CONSTRAINT participants_chat_fk FOREIGN KEY (chat_id) REFERENCES matcha.chats(id) ON DELETE CASCADE,
+    CONSTRAINT participants_profile_fk FOREIGN KEY (profile_id) REFERENCES matcha.profiles(id) ON DELETE CASCADE
+);');
+
+$dbh->query('CREATE TABLE matcha.messages (
+    id INT auto_increment PRIMARY KEY,
+    chat_id INT NOT NULL,
+    participant_id INT NOT NULL,
+    message TEXT,
+    reviewed BOOLEAN DEFAULT FALSE,
+    created_at DATETIME,
+    updated_at DATETIME,
+    CONSTRAINT messages_chat_fk FOREIGN KEY (chat_id) REFERENCES matcha.chats(id) ON DELETE CASCADE,
+    CONSTRAINT messages_participant_fk FOREIGN KEY (participant_id) REFERENCES matcha.participants(id) ON DELETE CASCADE
+);');
+
+
 
 
 // data

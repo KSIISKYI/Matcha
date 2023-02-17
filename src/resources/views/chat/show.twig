@@ -1,0 +1,39 @@
+{% extends 'layouts/base.twig' %}
+
+{% block headers %}
+<link rel="stylesheet" type="text/css" href="{{ full_url_for('base_path') }}/css/chat.css">
+<script defer src="{{ full_url_for('base_path') }}/js/chat.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="chat">
+            <div class="chat-header">
+                <a href="{{ url_for('profile-show', {'profile_id': other_participant.profile.id}) }}">
+                    <div class="profile-logo-demo">
+                        {% if other_participant.profile.profile_photos %}
+                            <img src="{{ full_url_for('base_path') }}/img/{{ other_participant.profile.profile_photos.0.path }}">
+                        {% else %}
+                            <img src="{{ full_url_for('base_path') }}/img/def_avatar.jpeg">
+                        {% endif %}
+                    </div>
+                </a>
+                <div style="display: flex; flex-direction: column; width: 85%">
+                    <a href="{{ url_for('profile-show', {'profile_id': other_participant.profile.id}) }}">
+                        <h2 style="color: grey; margin-bottom: 10px;">{{ other_participant.profile.user.username }}</h2>
+                    </a>
+                    <h3 style="color:#ccc" id="last_activity">{{ other_participant.profile.last_activity }}</h3>
+                </div>
+            </div>
+            <div class="chat-body">
+            </div>
+            <form class="chat-sendmessage">
+                <input id="from" type="hidden" value="{{ my_participant.id }}">
+                <input id="to" type="hidden" value="{{ other_participant.id }}">
+                <input id="chat" type="hidden" value="{{ chat.id}}">
+            	<input id="message" type="text" placeholder="Send message...">
+            	<button id="send_message">Send</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

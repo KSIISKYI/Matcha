@@ -196,6 +196,30 @@ span.psw {
     text-align: center;
 }
 
+.separator_line {
+    display: flex; 
+    justify-content: center; 
+    position: relative;
+    /* margin: 10px 0; */
+    color: grey;
+    font-weight: bold;
+    /* font-size: 20px */
+}
+
+.separator_line > .line {
+    width: 100%;
+    border: 1px solid #ccc;
+    position:relative;
+}
+
+.separator_line > .separator_text {
+    position: absolute;
+    padding: 0 20px;
+    top: -7px;
+    background: white;
+    color: grey;
+}
+
 
 /* ================= BURGER MENU ================= */
 
@@ -762,7 +786,7 @@ textarea:focus {
     top: 100px;
     z-index: 3;
     transform: translateY(0);
-    transition: transform 0.5s;
+    transition: transform 0.8s;
 }
 
 .modal_message.close {

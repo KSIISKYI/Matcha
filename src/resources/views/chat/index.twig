@@ -1,0 +1,81 @@
+{% extends 'layouts/base.twig' %}
+
+{% block headers %}
+<link rel="stylesheet" type="text/css" href="{{ full_url_for('base_path') }}/css/notification.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="notification">
+        <div class="form_grid">
+            <div style="text-align: center; color: grey; margin: 20px 0 0; font-size: 35px;">Chat list</div>
+
+            <hr>
+
+            {% for chat in chats %}
+                <a href="{{ url_for('chats-show', {'chat_id': chat.id}) }}">
+                    <div class="notification-message">
+                        <div class="profile-logo-demo">
+                            {% if chat.other_participant.profile.profile_photos %}
+                                <img src="{{ full_url_for('base_path') }}/img/{{ chat.other_participant.profile.profile_photos.0.path }}">
+                            {% else %}
+                                <img src="{{ full_url_for('base_path') }}/img/def_avatar.jpeg">
+                            {% endif %}
+                        </div>
+                        <div style="display: flex; flex-direction: column; width: 85%">
+                            <h3 style="color: grey; margin-bottom: 10px;">{{ chat.other_participant.profile.user.username }}</h3>
+                            <p style="color: #ccc">
+                                {% if chat.last_message %}
+                                    {% if chat.last_message.participant_id == chat.other_participant.id %}
+                                        {{ chat.other_participant.profile.user.username }}:
+                                    {% else %}
+                                        You:
+                                    {% endif %}
+                                    {{ chat.last_message.message }}
+                                {% else %}
+                                    There are no messages
+                                {% endif %}
+                            </p>
+                        </div>
+                        {% if chat.last_message %}
+                            {% if not chat.last_message.reviewed and chat.last_message.participant_id == chat.other_participant.id %}
+                                <div class="notification-message-status"></div>
+                            {% endif %}
+                            
+                        {% else %}
+                            {% if chat.created_at == chat.updated_at %}
+                                <div class="notification-message-status" style="background-color: #ff2f2f;"></div>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </a>
+            {% endfor %}
+                        
+            
+                {# <div class="notification-message-status"></div> #}
+        </div>
+
+        {% if page_obj.has_other_pages %}
+            <div class="pgn">
+                {% if page_obj.has_previous and  page_obj.previous_page_number != 1 %}
+                    <a href="{{ url_for('chats-index') }}?page=1"><div class="pgn__cell"><<</div></a>
+                {% endif %}
+
+                {% if page_obj.has_previous %}
+                    <a href="{{ url_for('chats-index') }}?page={{ page_obj.previous_page_number }}"><div class="pgn__cell"><</div></a>
+                {% endif %}
+                
+                <div class="pgn__cell pgn__cell_press">{{ page_obj.current_page_number }}</div>
+
+                {% if page_obj.has_next %}
+                    <a href="{{ url_for('chats-index') }}?page={{ page_obj.next_page_number }}"><div class="pgn__cell">></div></a>
+                {% endif %}
+
+                {% if page_obj.has_next and  page_obj.next_page_number != page_obj.last_page_number %}
+                    <a href="{{ url_for('chats-index') }}?page={{ page_obj.last_page_number }}"><div class="pgn__cell">>></div></a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

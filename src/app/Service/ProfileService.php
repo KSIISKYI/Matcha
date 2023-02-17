@@ -7,6 +7,7 @@ use Illuminate\Database\Capsule\Manager as Capsule;
 use App\Models\{Profile, User, DiscoverySetting, ReviewedProfile};
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection as SupportCollection;
 
 class ProfileService
 {
@@ -64,53 +65,54 @@ class ProfileService
     {
         $my_profile = $container->get('user')->profile;
         $profile_ids = $my_profile->interesting_profiles->intersect($my_profile->interested_profiles)->pluck('id')->reverse()->toArray();
-        $profiles = [];
+        $res = new Collection;
 
         foreach($profile_ids as $profile_id) {
-            $profile = self::getProfileWithPopularity($container, $profile_id);
-            $profile->match = true;
-            $profiles[] = $profile->toArray();
+            $res->push(self::getProfile($container, $profile_id));
         }
 
-        return $profiles;
+        return $res;
     }
 
     public static function getActivityLog(Container $container)
     {
         $my_profile = $container->get('user')->profile;
         $profile_ids = $my_profile->activity_log->pluck('id')->toArray();
-        $match_profile_ids = $my_profile->interesting_profiles->intersect($my_profile->interested_profiles)->pluck('id')->reverse()->toArray();
-        $interesting_profile_ids = $my_profile->interesting_profiles->pluck('id')->toArray();
-        $profiles = [];
+        $res = new Collection;
 
         foreach($profile_ids as $profile_id) {
-            $profile = self::getProfileWithPopularity($container, $profile_id);
-            
-            if (in_array($profile->id, $match_profile_ids)) {
-                $profile->match = true;
-            } elseif (in_array($profile->id, $interesting_profile_ids)) {
-                $profile->liked = true;
-            }
-
-            $profiles[] = $profile->toArray();
+            $res->push(self::getProfile($container, $profile_id));
         }
 
-        return $profiles;
+        return $res;
     }
 
-    public static function getProfileWithPopularity(Container $container, $profile_id)
+    public static function getProfile(Container $container, $profile_id)
     {
         $my_profile = $container->get('user')->profile;
-        $profile = Profile::selectRaw('*, 
-                calcFameRating(fame_rating) as fame_rating_percent, 
-                calcCrow(position_x, position_y, ?, ?) as distance',
-            [$my_profile->position_x, $my_profile->position_y]
-        )->find($profile_id);
-        $profile->is_blocked = in_array($profile->id, $my_profile->blocked_profiles->pluck('id')->toArray());
-        $profile->is_blocker = in_array($profile->id, $my_profile->blockers->pluck('id')->toArray());
-        $profile->is_reported = in_array($profile->id, $my_profile->fake_profiles->pluck('id')->toArray());
 
-        return $profile;
+        $position_x = $my_profile->position_x ? $my_profile->position_x : 0;
+        $position_y = $my_profile->position_y ? $my_profile->position_y : 0;
+        $matches = implode(', ', !empty($matches = $my_profile->interesting_profiles->intersect($my_profile->interested_profiles)->pluck('id')->reverse()->toArray()) ? $matches : [-1]);
+        $liked = implode(', ', !empty($liked = $my_profile->interesting_profiles->pluck('id')->toArray()) ? $liked : [-1]);
+        $blocked_profiles = implode(', ', !empty($blocked_profiles = $my_profile->blocked_profiles->pluck('id')->toArray()) ? $blocked_profiles : [-1]);
+        $blockers = implode(', ', !empty($blockers = $my_profile->blockers->pluck('id')->toArray()) ? $blockers : [-1]);
+        $fake_profiles = implode(', ', !empty($fake_profiles = $my_profile->fake_profiles->pluck('id')->toArray()) ? $fake_profiles : [-1]);
+
+        // var_dump($position_x, $position_y, $matches, $liked, $blocked_profiles, $blockers, $fake_profiles);
+
+        $profile_query = Profile::selectRaw("*,
+                    calcFameRating(fame_rating) as fame_rating_percent, 
+                    calcCrow(position_x, position_y, $position_x, $position_y) as distance,
+                    id in ($matches) as 'match',
+                    id in ($liked) as liked,
+                    id in ($blocked_profiles) as is_blocked,
+                    id in ($blockers) as is_blocker,
+                    id in ($fake_profiles) as is_reported",
+            )
+            ->whereIn('id', [$profile_id]);
+
+        return $profile_query->first();
     }
 
     public static function getSuitableProfiles(Container $container)
@@ -153,10 +155,7 @@ class ProfileService
             $suitable_profiles = $suitable_profiles->whereRaw('(gender_id = ? or gender_id is null)', [$gender]);
         }
         
-        $suitable_profiles = $suitable_profiles->orderByRaw('distance, count(*) desc, fame_rating_percent desc')
-            ->take(10)
-            ->get()
-            ->toArray();
+        $suitable_profiles = $suitable_profiles->orderByRaw('distance, count(*) desc, fame_rating_percent desc')->get();
 
         return $suitable_profiles;
     }

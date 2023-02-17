@@ -6,6 +6,7 @@ var nope = document.getElementById('nope');
 var love = document.getElementById('love');
 let cards_container = document.querySelector('.tinder--cards');
 let index = 0;
+let current_page = 1;
 
 var nope = document.getElementById('nope');
 var love = document.getElementById('love');
@@ -13,9 +14,9 @@ let open_profile = document.getElementById('open_profile');
 let my_profile;
 let current_profile_id;
 
-// function get profiles by step "index"
+// function get profiles by step "current_page"
 async function getProfiles() {
-    let response = await fetch('http://localhost:8000/profiles');
+    let response = await fetch(`http://localhost:8000/profiles?page=${current_page}`);
     let profiles = await response.json();
 
     return profiles
@@ -122,7 +123,7 @@ async function initHummer() {
 
                 await sendAnswer(current_profile_id, toX > 0);
 
-                // is checked, if there are two cards left, we create new cards
+                // is checked, if there are 0 cards left, we create new cards
                 if(document.querySelectorAll('.tinder--card:not(.removed)').length < 1) {
                     let profiles = await getProfiles();
                     createCards(profiles);
@@ -157,7 +158,7 @@ async function createButtonListener(love) {
         //send answer
         await sendAnswer(current_profile_id, love);
   
-        // is checked, if there are two cards left, we create new cards
+        // is checked, if there are 0 cards left, we create new cards
         if(document.querySelectorAll('.tinder--card:not(.removed)').length < 1) {
             let profiles = await getProfiles();
             createCards(profiles);

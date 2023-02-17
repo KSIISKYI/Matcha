@@ -105,5 +105,9 @@ $container->set('MatchController', function (Container $container) {
     return new \App\Controllers\MatchController($container);
 });
 
+$container->set('ChatController', function (Container $container) {
+    return new \App\Controllers\ChatController($container);
+});
+
 $routes = require_once __DIR__ . '/../app/routes.php';
 $routes($app);

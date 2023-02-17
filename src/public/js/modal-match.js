@@ -27,7 +27,7 @@ function modal_init(my_profile, another_profile) {
     let i = match_message.querySelector('i');
 
     setTimeout(() => { modal.style.display = 'flex' }, 300);
-    setTimeout(() => { modal_message.classList.remove('close') }, 500);
+    setTimeout(() => { modal_message.classList.remove('close') }, 700);
     setTimeout(() => { i.style.fontSize = '55px' }, 1000);
 }
 

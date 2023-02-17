@@ -5,6 +5,7 @@ namespace App\Service;
 use DI\Container;
 
 use App\Models\Profile;
+use App\Service\Chat\ChatService;
 
 class MatchService
 {
@@ -30,7 +31,10 @@ class MatchService
         $my_profile = $container->get('user')->profile;
 
         if (in_array($profile_id, $my_profile->interested_profiles->pluck('id')->toArray())) {
-            return Profile::with('user', 'profile_photos')->find($profile_id)->toArray();
+            $profile_2 = Profile::with('user', 'profile_photos')->find($profile_id);
+            ChatService::createChat($my_profile, $profile_2);
+
+            return $profile_2->toArray();
         }
 
         return [];

@@ -22,7 +22,7 @@ class ProfileController extends Controller
             return $response;
         } else {
             $view = Twig::fromRequest($request);
-            $profile = ProfileService::getProfileWithPopularity($this->container, $user->profile->id);
+            $profile = ProfileService::getProfile($this->container, $user->profile->id);
             
             return $view->render($response, 'profile/profile.twig', ['profile' => $profile]);
         }
@@ -67,7 +67,7 @@ class ProfileController extends Controller
     public function show(Request $request, Response $response, array $args)
     {
         ProfileService::addToActivityLog($this->container, $args['profile_id']);
-        $profile = ProfileService::getProfileWithPopularity($this->container, $args['profile_id']);
+        $profile = ProfileService::getProfile($this->container, $args['profile_id']);
         $view = Twig::fromRequest($request);
         
         if (isset($request->getHeaders()['Content-Type']) && $request->getHeaders()['Content-Type'][0] === 'application/json') {
@@ -82,10 +82,15 @@ class ProfileController extends Controller
 
     public function getProfiles(Request $request, Response $response)
     {
+        $data = $request->getQueryParams();
         $profiles = ProfileService::getSuitableProfiles($this->container);
+        $paginator = new Paginator(
+            $profiles,
+            2
+        );
 
         $response->withHeader('Content-Type', 'application/json');
-        $response->getBody()->write(json_encode($profiles));
+        $response->getBody()->write(json_encode($paginator->getData(isset($data['page']) ? $data['page'] : 1)));
 
         return $response;
     }
@@ -93,7 +98,6 @@ class ProfileController extends Controller
     public function getActivityLog(Request $request, Response $response)
     {
         $data = $request->getQueryParams();
-        $profile = $this->container->get('user')->profile;
         $profiles = ProfileService::getActivityLog($this->container);
         $view = Twig::fromRequest($request);
     

@@ -21,7 +21,7 @@ return function(App $app) {
     $app->group('', function(RouteCollectorProxy $group) use($app) {
         $group->get('/profiles/my', 'ProfileController:showMe')->setName('profile-index');
         $group->get('/profiles/{profile_id}', 'ProfileController:show')->setName('profile-show')->add(new IsMyProfileMiddleware($app->getContainer()));
-        $group->get('/profiles', 'ProfileController:getProfiles');
+        $group->get('/profiles', 'ProfileController:getProfiles'); // this will change
         $group->get('/auth/signout', 'AuthController:logout')->setName('signout-get');
 
         $group->get('/profile/settings', 'ProfileController:showSettings')->setName('profile_settings-get');
@@ -43,6 +43,10 @@ return function(App $app) {
         $group->get('/block_profile/{profile_id}', 'ProfileController:blockProfile')->setName('block_profile');
         $group->get('/unblock_profile/{profile_id}', 'ProfileController:unblockProfile')->setName('unblock_profile');
         $group->get('/report_fake_profile/{profile_id}', 'ProfileController:reportFakeProfile')->setName('report_fake_profile');
+
+        $group->get('/chats', 'ChatController:index')->setName('chats-index');
+        $group->get('/chats/{chat_id}', 'ChatController:show')->setName('chats-show');
+        $group->get('/chats/{chat_id}/messages', 'ChatController:getMessages')->setName('messages-index');
     })->add(new AuthenticateMiddleware($app->getContainer())); 
 
     $app->group('', function(RouteCollectorProxy $group) use($app) {
