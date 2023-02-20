@@ -131,7 +131,10 @@
                     </a>
                     <a href="{{ url_for('chats-index') }}" class="nav-link">
                         <i class="fa-regular fa-comment" id="messages">
-                            <span class="amount" style="background-color:#C14D4B"><b>6</b></span>
+                            {% set count_unreviewed_messages = getUser().profile.count_unreviewed_messages %}
+                            {% if count_unreviewed_messages %}
+                                <span class="amount" style="background-color:#C14D4B"><b>{{ count_unreviewed_messages }}</b></span>
+                            {% endif %}
                         </i>
                     </a>
                     <a href="{{ url_for('signout-get') }}" class="nav-link menu-link" style="font-size:20px;">

@@ -40,11 +40,11 @@ class ChatController extends Controller
             $my_profile = $this->container->get('user')->profile;
 
             if ($chat->participants->first()->profile->id === $my_profile->id) {
-                $other_participant = $chat->participants->last();
-                $my_participant = $chat->participants->first();
+                $other_participant = $chat->participants->last()->load('profile');
+                $my_participant = $chat->participants->first()->load('profile');
             } else {
-                $other_participant = $chat->participants->first();
-                $my_participant = $chat->participants->last();
+                $other_participant = $chat->participants->first()->load('profile');
+                $my_participant = $chat->participants->last()->load('profile');
             }
 
             $data = [

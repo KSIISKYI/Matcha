@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Participant extends Model
 {
     protected $table = 'participants';
-    protected $with = array('profile');
+    protected $with = array('chat');
     protected $guarded = ['id'];
     public $timestamps = false;
 

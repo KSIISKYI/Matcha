@@ -14,11 +14,8 @@ class HomeController extends Controller
     public function index(Request $request, Response $response)
     {
         $my_profile = Profile::find(1);
-        // $matches = implode(' ,', $my_profile->interesting_profiles->intersect($my_profile->interested_profiles)->pluck('id')->reverse()->toArray());
+        
 
-        // $profile = Profile::selectRaw("*, (id in (:matches)) as is_match", ['matches' => $matches])->get()->toArray();
-
-        $profiles_query = ProfileService::getProfiles($my_profile);
 
 
 
@@ -43,11 +40,11 @@ class HomeController extends Controller
         //     ->whereRaw('id <> 1');
 
         echo '<pre>';
-        print_r($profiles_query->get()->toArray());
+        print_r($my_profile->toArray());
         echo '</pre>';
 
 
 
-        return $response;
+        // return $response;
     }
 }

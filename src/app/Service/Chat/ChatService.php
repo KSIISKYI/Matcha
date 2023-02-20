@@ -35,7 +35,7 @@ class ChatService
             $chat = $participant->chat;
 
             $chat->other_participant = ($other = $chat->participants->first())->id == $participant->id ? 
-                $chat->participants->last()->toArray() : $other->toArray();
+                $chat->participants->last()->load('profile')->toArray() : $other->load('profile')->toArray();
             $chats->push($chat);
         } 
 
