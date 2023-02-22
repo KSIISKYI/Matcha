@@ -1,8 +1,8 @@
 <?php
 
-require_once '../Connection.php';
+require_once  __DIR__ . '/../Connection.php';
 
-$dbh = (new Connection('127.0.0.1', 'root', 'root'))->getConnection();
+$dbh = (new Connection)->getConnection();
 
 $dbh->query('DROP DATABASE IF EXISTS matcha');
 $dbh->query('CREATE DATABASE matcha');
