@@ -11,6 +11,7 @@
     transition: all ease .5s;
     transform: translateY(0);
     font-size: 20px;
+	z-index: 3;
 }
 
 .notification-demo.close {
@@ -67,15 +68,19 @@
 	width: 100%;
     border-radius: 5px;
     padding: 10px;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
     align-items: center;
-    position: relative;
     transition: all ease .5s;
-    cursor: pointer;
+    column-gap: 20px;
+    row-gap: 15px;
+	opacity: 0.8;
+	cursor: pointer;
 }
 
 .notification-message.not_reviewed {
-	opacity: 0.8;
+	opacity: 1;
 }
 
 .notification-message:hover {
@@ -88,4 +93,7 @@
     height: 15px;
     background-color: #20c120;
     border-radius: 50%;
+	grid-column-start: 3; 
+	align-self: flex-start; 
+	justify-self: end;
 }	

@@ -6,14 +6,23 @@ use Slim\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Illuminate\Support\Collection;
 
-use App\Models\{Chat, User, Profile};
+use App\Models\{Chat, User, Profile, Notification};
 use App\Service\ProfileService;
 
 class HomeController extends Controller
 {
     public function index(Request $request, Response $response)
     {
-        $my_profile = Profile::find(1);
+        // $my_profile = Profile::find(1)->participants()->withCount(['messages' => function($q) {
+        //     echo 1;
+        // }])->get();
+
+        // $my_profile = Profile::find(1)->withCount(['notifications' => function($query) {
+        //     $query->where('reviewed', false);
+        // }])->get();
+
+        $user = Notification::create(['notifier_id' => 1, 'notified_id' => 2, 'event_id' => 1])->load('event');
+        // $user = Notification::find(1);
         
 
 
@@ -40,7 +49,7 @@ class HomeController extends Controller
         //     ->whereRaw('id <> 1');
 
         echo '<pre>';
-        print_r($my_profile->toArray());
+        print_r($user->toArray());
         echo '</pre>';
 
 

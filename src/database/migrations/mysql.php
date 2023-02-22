@@ -170,7 +170,24 @@ $dbh->query('CREATE TABLE matcha.messages (
     CONSTRAINT messages_participant_fk FOREIGN KEY (participant_id) REFERENCES matcha.participants(id) ON DELETE CASCADE
 );');
 
+$dbh->query('CREATE TABLE matcha.notification_events (
+    id INT auto_increment PRIMARY KEY,
+    type VARCHAR(20),
+    context VARCHAR(128)
+);');
 
+$dbh->query('CREATE TABLE matcha.notifications (
+    id INT auto_increment PRIMARY KEY,
+    notifier_id INT NOT NULL,
+    notified_id INT NOT NULL,
+    event_id INT NOT NULL,
+    reviewed BOOLEAN DEFAULT FALSE,
+    created_at DATETIME,
+    updated_at DATETIME,
+    CONSTRAINT notifications_from_fk FOREIGN KEY (notifier_id) REFERENCES matcha.profiles(id) ON DELETE CASCADE,
+    CONSTRAINT notifications_to_fk FOREIGN KEY (notified_id) REFERENCES matcha.profiles(id) ON DELETE CASCADE,
+    CONSTRAINT notifications_event_fk FOREIGN KEY (event_id) REFERENCES matcha.notification_events(id) ON DELETE CASCADE
+);');
 
 
 // data
@@ -236,4 +253,10 @@ $dbh->query("INSERT INTO matcha.interests(name)
         ('music'),
         ('fishing'),
         ('cars')
+");
+
+$dbh->query("INSERT INTO matcha.notification_events(type, context)
+    VALUES
+        ('like', 'liked you'),
+        ('match', 'You have new match')
 ");

@@ -2,6 +2,7 @@
 
 {% block headers %}
 <link rel="stylesheet" type="text/css" href="{{ full_url_for('base_path') }}/css/notification.css">
+<script defer src="http://localhost:8000/js/notification.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -14,29 +15,45 @@
 
             {% for chat in chats %}
                 <a href="{{ url_for('chats-show', {'chat_id': chat.id}) }}">
-                    <div class="notification-message">
-                        <div class="profile-logo-demo">
+                    <div class="notification-message
+                        {% if chat.last_message %}
+                            {% if not chat.last_message.reviewed and chat.last_message.participant_id == chat.other_participant.id %}
+                                not_reviewed
+                            {% endif %}
+                        {% else %}
+                            {% if chat.created_at == chat.updated_at %}
+                                not_reviewed
+                            {% endif %}
+                        {% endif %}
+                        ">
+                    
+                        <div class="profile-logo-demo" style="margin:0; grid-row-start: 1; grid-row-end: 3;">
                             {% if chat.other_participant.profile.profile_photos %}
                                 <img src="{{ full_url_for('base_path') }}/img/{{ chat.other_participant.profile.profile_photos.0.path }}">
                             {% else %}
                                 <img src="{{ full_url_for('base_path') }}/img/def_avatar.jpeg">
                             {% endif %}
                         </div>
-                        <div style="display: flex; flex-direction: column; width: 85%">
-                            <h3 style="color: grey; margin-bottom: 10px;">{{ chat.other_participant.profile.user.username }}</h3>
-                            <p style="color: #ccc">
-                                {% if chat.last_message %}
-                                    {% if chat.last_message.participant_id == chat.other_participant.id %}
-                                        {{ chat.other_participant.profile.user.username }}:
-                                    {% else %}
-                                        You:
-                                    {% endif %}
-                                    {{ chat.last_message.message }}
-                                {% else %}
-                                    There are no messages
-                                {% endif %}
-                            </p>
+                        <h3 style="color: grey; align-self: flex-end;">{{ chat.other_participant.profile.user.username }}</h3>
+                        <div style="color: #ccc; align-self: flex-end;">
+                            {% if chat.last_message %}
+                                {{ chat.last_message.created_at|date("Y-m-d H:i")}}
+                            {% else %}
+                                {{ chat.updated_at|date("Y-m-d H:i") }}
+                            {% endif %}
                         </div>
+                        <p style="color: #ccc; align-self: flex-start;">
+                            {% if chat.last_message %}
+                                {% if chat.last_message.participant_id == chat.other_participant.id %}
+                                    {{ chat.other_participant.profile.user.username }}:
+                                {% else %}
+                                    You:
+                                {% endif %}
+                                {{ chat.last_message.message }}
+                            {% else %}
+                                There are no messages
+                            {% endif %}
+                        </p>
                         {% if chat.last_message %}
                             {% if not chat.last_message.reviewed and chat.last_message.participant_id == chat.other_participant.id %}
                                 <div class="notification-message-status"></div>
@@ -50,9 +67,6 @@
                     </div>
                 </a>
             {% endfor %}
-                        
-            
-                {# <div class="notification-message-status"></div> #}
         </div>
 
         {% if page_obj.has_other_pages %}

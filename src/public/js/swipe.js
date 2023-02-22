@@ -11,7 +11,7 @@ let current_page = 1;
 var nope = document.getElementById('nope');
 var love = document.getElementById('love');
 let open_profile = document.getElementById('open_profile');
-let my_profile;
+// let my_profile;
 let current_profile_id;
 
 // function get profiles by step "current_page"
@@ -32,9 +32,15 @@ async function sendAnswer(profile_id, is_like) {
         body: JSON.stringify({is_like: is_like})
     })
 
+    if (is_like) {
+        sendNotification(profile_id, 1);
+    }
+
     let data = await response.json();
 
     if (Object.keys(data).length > 0) {
+        sendNotification(profile_id, 2);
+        sendNotification(my_profile.id, 2);
         modal_init(my_profile, data);
     } 
 }
@@ -174,12 +180,12 @@ async function createButtonListener(love) {
 }
 
 async function run() {
-    let my_profile_resp = await fetch('http://localhost:8000/profiles/my', {
-        headers : {
-            'Content-Type' : 'application/json'
-        }
-    })
-    my_profile = await my_profile_resp.json();
+    // let my_profile_resp = await fetch('http://localhost:8000/profiles/my', {
+    //     headers : {
+    //         'Content-Type' : 'application/json'
+    //     }
+    // })
+    // my_profile = await my_profile_resp.json();
     let profiles = await getProfiles();
 
     if (profiles.length > 0) {

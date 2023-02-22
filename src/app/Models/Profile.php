@@ -97,4 +97,9 @@ class Profile extends Model
 
         return $res;
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'notified_id', 'id');
+    }
 }

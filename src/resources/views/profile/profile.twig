@@ -3,6 +3,7 @@
 {% block headers %}
 <script defer src="http://localhost:8000/js/slider.js"></script>
 <script defer src="http://localhost:8000/js/modal-success.js"></script>
+<script defer src="http://localhost:8000/js/notification.js"></script>
 <link rel="stylesheet" type="text/css" href="{{ full_url_for('base_path') }}/css/success_animation.css">
 {% endblock %}
 
@@ -65,7 +66,7 @@
                     </div>
                 </div>
 
-                {% if profile.id != getUser().profile.id %}
+                {% if profile.id != getProfile().id %}
                     <div class="form_option" style="color:grey;">
                         <div id="last_activity" value="{{ profile.last_activity }}"></div>
                         <br>
@@ -103,7 +104,7 @@
 
             <hr>
 
-            {% if profile.id == getUser().profile.id %}
+            {% if profile.id == getProfile().id %}
                 <a href="{{ url_for('profile_settings-get') }}"><button>Edit profile</button></a>
             {% else %}
                 <div class="form_option" style="display: flex; justify-content: space-around;">

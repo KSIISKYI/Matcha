@@ -2,13 +2,11 @@
 
 require __DIR__ . '/../../../vendor/autoload.php';
 
-
 use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
 
 use App\Service\Chat\Chat;
-
 
 $server = IoServer::factory(
         new HttpServer(

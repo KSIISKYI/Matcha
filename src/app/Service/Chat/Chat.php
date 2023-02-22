@@ -6,7 +6,7 @@ use Illuminate\Database\Capsule\Manager as DB;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-use App\Models\Message;
+use App\Models\{Message, Notification};
 
 // Looing for .env at the root directory
 $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../');
@@ -39,23 +39,40 @@ class Chat implements MessageComponentInterface {
 
     public function onOpen(ConnectionInterface $conn) {
         // Store the new connection to send messages to later
-        $conn->resourceId = parseCookie($conn->httpRequest->getHeaders()['Cookie'][0])['from'];
+        $cookies = parseCookie($conn->httpRequest->getHeaders()['Cookie'][0]);
+        $conn->resourceId = $cookies['from'];
+        $conn->type_connection = $cookies['type'];
+
         $this->clients->attach($conn);
 
-        echo "New connection! ({$conn->resourceId})\n";
+        echo "New connection! ({$conn->resourceId}, {$conn->type_connection})\n";
     }
 
     public function onMessage(ConnectionInterface $from, $msg) {
         $data_msg = (json_decode($msg));
-        $new_msg = Message::create([
-            'chat_id' => $data_msg->chat,
-            'participant_id' => $data_msg->from,
-            'message' => $data_msg->message
-        ]);
+
+        if ($data_msg->type == 'chat') {
+            $new_msg = Message::create([
+                'chat_id' => $data_msg->chat,
+                'participant_id' => $data_msg->from,
+                'message' => $data_msg->message
+            ]); 
+        } else {
+            $new_msg = Notification::create([
+                'notifier_id' => $data_msg->from,
+                'notified_id' => $data_msg->to,
+                'event_id' => $data_msg->event_id
+            ])->load('event'); 
+        }
 
         foreach ($this->clients as $client) {
 
-            if ($data_msg->from == $client->resourceId || $data_msg->to == $client->resourceId) {
+            if ($data_msg->from == $client->resourceId && $client->type_connection != 'notification' || $data_msg->to == $client->resourceId and $data_msg->type == $client->type_connection) {
+                
+                if ($client->resourceId == $data_msg->to && $data_msg->type == 'chat') {
+                    $new_msg->update(['reviewed' => true]);
+                }
+                
                 $client->send(json_encode($new_msg->toArray()));
             }
         }

@@ -34,109 +34,7 @@ async function appendMessages(messages_data)
         chat_body.insertBefore(messageHTML, chat_body.firstChild);
     }
     
-    setTimeZones();
-}
-
-function insertTimeZone(message, time_zone)
-{
-    let diff_time_elem = htmlToElement(`
-        <div class="separator_line" style="font-size:20px; margin:30px 0 20px;">
-            <div class="line"></div>
-            <div class="separator_text" style="top: -10px;">${time_zone}</div>
-        </div>
-    `);
-    chat_body.insertBefore(diff_time_elem, message);
-}
-
-function removeTimeZones()
-{
-    let time_zones = [...chat_body.children].filter(elem => [...elem.classList].includes('separator_line'))
-    
-    for (let time_zone of time_zones) {
-        time_zone.remove()
-    }
-}
-
-function setTimeZones()
-{
-    removeTimeZones();
-
-    let messages = ([...chat_body.children].reverse()).filter(elem => [...elem.classList].includes('chat-message'));
-
-    for(let i = 0; i < messages.length; i++) {
-        if (i + 1 === messages.length) {
-            if (messages[i].previousElementSibling) {
-                break;
-                
-            } else {
-                let res = null;
-
-                switch (getDiffTime2(
-                        moment(messages[i].querySelector('.chat-message-time').innerHTML, 'L'),
-                        moment(messages[i].querySelector('.chat-message-time').innerHTML, 'L'),
-                )) {
-                    case 0:
-                        res = "Today";
-                        break; 
-                    case 1:
-                        res = "Yesterday";
-                        break;
-                    case 3:
-                        res = moment(messages[i].querySelector('.chat-message-time').innerHTML, 'L').format('L');
-                }
-                
-                insertTimeZone(messages[i], res);
-                break;
-            }
-        }
-
-        let res = null;
-
-        switch (getDiffTime2(
-                moment(messages[i].querySelector('.chat-message-time').innerHTML, 'L'),
-                moment(messages[i+1].querySelector('.chat-message-time').innerHTML, 'L'),
-            )) {
-            case 0:
-                break;
-            case 1:
-                res = "Today";
-                break;
-            case 2: 
-                res = "Yesterday";
-                break;
-            case 3:
-                res = moment(messages[i].querySelector('.chat-message-time').innerHTML, 'L').format('L')
-        }
-
-        if (res && [...messages[i].previousElementSibling.classList].includes('chat-message')) {
-            insertTimeZone(messages[i], res);
-        }
-    }
-}
-
-function getDiffTime2(date1, date2)
-{
-    let d_diff = date1.format('D') - date2.format('D');
-    let m_diff = date1.format('M') - date2.format('M');
-    let y_diff = date1.format('YYYY') - date2.format('YYYY');
-    let diff = y_diff * 365 + m_diff * 30 + d_diff;
-
-    let d_diff_now = moment().format('D') - date1.format('D');
-    let m_diff_now = moment().format('M') - date1.format('M');
-    let y_diff_now = moment().format('YYYY') - date1.format('YYYY');
-    let diff_now = y_diff_now * 365 + m_diff_now * 30 + d_diff_now;
-
-    console.log(diff, diff_now)
-
-    if (diff === 0 && diff_now === 0) {
-        return 0;
-    } else if (diff > 0 && diff_now === 0) {
-        return 1;
-    } else if (diff > 0 && diff_now === 1) {
-        return 2;
-    } else {
-        return 3;
-    }
+    setTimeZones(chat_body, 'chat-message', '.chat-message-time');
 }
 
 function appendMessage(message_data, end=true)
@@ -191,7 +89,8 @@ function createHTMLMessageElement(message_data)
 function createSocketConnection()
 {
     document.cookie = 'from=' + data.my_participant.id + '; path=/';
-    socket = new WebSocket('ws://Oleksiii:sdfdfdfsdf21edsfwrfsdvewrok3iwryiso@localhost:8090?name=Oleksii');
+    document.cookie = 'type=chat; path=/';
+    socket = new WebSocket('ws://Oleksiii:sdfdfdfsdf21edsfwrfsdvewrok3iwryiso@localhost:8090');
 }
 
 function checkLengthMessage()

@@ -109,5 +109,9 @@ $container->set('ChatController', function (Container $container) {
     return new \App\Controllers\ChatController($container);
 });
 
+$container->set('NotificationController', function (Container $container) {
+    return new \App\Controllers\NotificationController($container);
+});
+
 $routes = require_once __DIR__ . '/../app/routes.php';
 $routes($app);

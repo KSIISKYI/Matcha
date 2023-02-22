@@ -19,7 +19,7 @@ function modal_init(my_profile, another_profile) {
 				<div class="profile-logo-demo" style="width: 200px; height: 200px; border: 3px solid white;">
 					<img src="http://localhost:8000/img/${another_profile_photo}"></div>
 				</div>
-			<a href="#" style="width: 50%;"><div class="match_button">go to chat</div></a>
+			<a href="http://localhost:8000/chats/${another_profile.new_chat.id}" style="width: 50%;"><div class="match_button">go to chat</div></a>
 		</div>`
     );
 

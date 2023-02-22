@@ -32,7 +32,8 @@ class MatchService
 
         if (in_array($profile_id, $my_profile->interested_profiles->pluck('id')->toArray())) {
             $profile_2 = Profile::with('user', 'profile_photos')->find($profile_id);
-            ChatService::createChat($my_profile, $profile_2);
+            $chat = ChatService::createChat($my_profile, $profile_2);
+            $profile_2->new_chat = $chat;
 
             return $profile_2->toArray();
         }
