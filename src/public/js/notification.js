@@ -6,7 +6,7 @@ let notifications_block = document.querySelector('#notifications');
 
 async function getMyProfile()
 {
-    let response = await fetch('http://localhost:8000/profiles/my', {
+    let response = await fetch('/profiles/my', {
         headers: {
             'Content-Type': 'application/json'
         }
@@ -32,12 +32,14 @@ function markReviewed()
     }
 }
 
-function sendNotification(to, event_id)
+function sendNotification(from, to, event_id)
 {
+    console.log(from, to, event_id);
     var context = {
         type: 'notification',
-        from: my_profile.id,
+        from: from,
         to: to,
+        mode: 'create',
         event_id: event_id,   
     };
     
@@ -47,11 +49,8 @@ function sendNotification(to, event_id)
 async function run()
 {
     if (notifications_block) {
-        let notifications = notifications_block.querySelectorAll('.notification-message');
-
         removeTimeZones(notifications_block);
         setTimeZones(notifications_block, 'notification-message', '.notification-time');
-
     }
 
     markReviewed();
@@ -71,7 +70,8 @@ async function run()
     };
 
     socket.onmessage = function(event) {
-        let notification_data = JSON.parse(event.data);
+        let response = JSON.parse(event.data);
+        let notification_data = response.message;
         let context = notification_data.event_id == 1 ? 'You have new like' : 'You have new match';
         let notif_class = notification_data.event_id == 1 ? 'fa-solid fa-heart' : 'fa-solid fa-fire';
         let notification = htmlToElement(`

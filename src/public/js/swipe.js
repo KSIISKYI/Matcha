@@ -11,19 +11,18 @@ let current_page = 1;
 var nope = document.getElementById('nope');
 var love = document.getElementById('love');
 let open_profile = document.getElementById('open_profile');
-// let my_profile;
 let current_profile_id;
 
 // function get profiles by step "current_page"
 async function getProfiles() {
-    let response = await fetch(`http://localhost:8000/profiles?page=${current_page}`);
+    let response = await fetch(`/profiles?page=${current_page}`);
     let profiles = await response.json();
 
     return profiles
 }
 
 async function sendAnswer(profile_id, is_like) {
-    let response = await fetch('http://localhost:8000/find_match/' + profile_id, {
+    let response = await fetch('/find_match/' + profile_id, {
         method: 'post',
         headers: {
             'Accept': 'application/json',
@@ -33,14 +32,14 @@ async function sendAnswer(profile_id, is_like) {
     })
 
     if (is_like) {
-        sendNotification(profile_id, 1);
+        sendNotification(my_profile.id, profile_id, 1);
     }
 
     let data = await response.json();
 
     if (Object.keys(data).length > 0) {
-        sendNotification(profile_id, 2);
-        sendNotification(my_profile.id, 2);
+        sendNotification(my_profile.id, profile_id, 2);
+        sendNotification(profile_id, my_profile.id, 2);
         modal_init(my_profile, data);
     } 
 }
@@ -51,7 +50,7 @@ async function createCards(profiles) {
         let photo = profile.profile_photos[0] ? profile.profile_photos[0].path : 'def_avatar.jpeg';
         let new_card = htmlToElement(
             `<div class="tinder--card" style="z-index:0;${postion}" profile_id=${profile.id}>
-                <img src="http://localhost:8000/img/${photo}">
+                <img src="/img/${photo}">
                 <div id="shadow" style="pointer-events: none;"></div> 
                 <div style="position: absolute; bottom: 0; color: #dddddd; padding: 20px; pointer-events: none;">
                     <h1>${profile.user.username}, ${profile.age}</h1>
@@ -132,8 +131,13 @@ async function initHummer() {
                 // is checked, if there are 0 cards left, we create new cards
                 if(document.querySelectorAll('.tinder--card:not(.removed)').length < 1) {
                     let profiles = await getProfiles();
-                    createCards(profiles);
-                    initCards();
+
+                    if (profiles.length < 1) {
+                        closeSwipeMenu();
+                    } else {
+                        createCards(profiles);
+                        initCards();
+                    }
 
                     await initHummer();
                 } else {
@@ -152,7 +156,6 @@ async function createButtonListener(love) {
         if (!cards.length) return false;
   
         var card = cards[0];
-  
         card.classList.add('removed');
   
         if (love) {
@@ -167,8 +170,13 @@ async function createButtonListener(love) {
         // is checked, if there are 0 cards left, we create new cards
         if(document.querySelectorAll('.tinder--card:not(.removed)').length < 1) {
             let profiles = await getProfiles();
-            createCards(profiles);
-            initCards();
+
+            if (profiles.length < 1) {
+                closeSwipeMenu();
+            } else {
+                createCards(profiles);
+                initCards();
+            }
 
             await initHummer();
         } else {
@@ -179,13 +187,22 @@ async function createButtonListener(love) {
     };
 }
 
+function closeSwipeMenu()
+{
+    tinder_container.remove();
+    let content = document.querySelector('.content');
+    let response_element = htmlToElement(`
+        <div class="container">
+            <h1 style="text-align: center; color: grey; margin-top: 30%;">
+                At the moment the suitable profiles are not found, try changing your 
+                <a href="/discovery_settings" style="color: #636363; text-decoration: underline;">search settings</a>
+            </h1>
+        </div>
+    `)
+    content.appendChild(response_element);
+}
+
 async function run() {
-    // let my_profile_resp = await fetch('http://localhost:8000/profiles/my', {
-    //     headers : {
-    //         'Content-Type' : 'application/json'
-    //     }
-    // })
-    // my_profile = await my_profile_resp.json();
     let profiles = await getProfiles();
 
     if (profiles.length > 0) {
@@ -196,13 +213,15 @@ async function run() {
         love.addEventListener('click', loveListener);
     
         open_profile.addEventListener('click', (e) => {
-            window.location.replace('http://' + location.hostname + ':' + location.port + '/profiles/' + current_profile_id)
+            window.location.replace('/profiles/' + current_profile_id)
         })
     
         createCards(profiles);
         initCards();
     
         await initHummer()
+    } else {
+        closeSwipeMenu();
     }
 }
 

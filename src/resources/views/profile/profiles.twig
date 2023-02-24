@@ -1,9 +1,9 @@
 {% extends 'layouts/base.twig' %}
 
 {% block headers %}
-<link rel="stylesheet" type="text/css" href="{{ full_url_for('base_path') }}/css/find_match.css">
-<script defer src="{{ full_url_for('base_path') }}/js/profiles.js"></script>
-<script defer src="http://localhost:8000/js/notification.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/find_match.css">
+<script defer src="/js/profiles.js"></script>
+<script defer src="/js/notification.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -18,9 +18,9 @@
                 {% endif %}
 
                 {% if profile.profile_photos.0 %}
-                    <img src="http://localhost:8000/img/{{ profile.profile_photos.0.path }}">
+                    <img src="/img/{{ profile.profile_photos.0.path }}">
                 {% else %}
-                    <img src="http://localhost:8000/img/def_avatar.jpeg">
+                    <img src="/img/def_avatar.jpeg">
                 {% endif %}
 
                 <div id="shadow" style="pointer-events: none;"></div> 

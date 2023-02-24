@@ -14,7 +14,7 @@ $server = IoServer::factory(
                 new Chat()
             )
         ),
-        8090
+        8090 // when changing the port, also change it in the chat.js(168 line) and notification.js(22 line) files.
     );
 
 $server->run();

@@ -1,10 +1,10 @@
 {% extends 'layouts/base.twig' %}
 
 {% block headers %}
-<script defer src="http://localhost:8000/js/slider.js"></script>
-<script defer src="http://localhost:8000/js/modal-success.js"></script>
-<script defer src="http://localhost:8000/js/notification.js"></script>
-<link rel="stylesheet" type="text/css" href="{{ full_url_for('base_path') }}/css/success_animation.css">
+<script defer src="/js/slider.js"></script>
+<script defer src="/js/modal-success.js"></script>
+<script defer src="/js/notification.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/success_animation.css">
 {% endblock %}
 
 {% block modal %}
@@ -41,7 +41,7 @@
                     {% if profile.profile_photos.count() > 0 %}
                         <div class="slider-line">
                             {% for profile_photo in profile.profile_photos %}
-                                <img src="http://localhost:8000/img/{{ profile_photo.path }}" value="{{ profile_photo.id }}">
+                                <img src="/img/{{ profile_photo.path }}" value="{{ profile_photo.id }}">
                             {% endfor %}
                         </div>
                         {% if profile.profile_photos.count() > 1 %}
@@ -51,7 +51,7 @@
                         {% endif %}
                     {% else %}
                         <div class="slider-line">
-                            <img src="http://localhost:8000/img/def_avatar.jpeg">
+                            <img src="/img/def_avatar.jpeg">
                         </div>
                     {% endif %}
                     </div>

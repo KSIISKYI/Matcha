@@ -1,9 +1,9 @@
 {% extends 'layouts/base.twig' %}
 
 {% block headers %}
-<link rel="stylesheet" type="text/css" href="{{ full_url_for('base_path') }}/css/notification.css">
-<script defer src="{{ full_url_for('base_path') }}/js/moment.min.js"></script>
-<script defer src="http://localhost:8000/js/notification.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/notification.css">
+<script defer src="/js/moment.min.js"></script>
+<script defer src="/js/notification.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -21,11 +21,18 @@
                                     not_reviewed
                                 {% endif %}
                             " href="{{ full_url_for('notifications-show', {'notification_id': notification.id}) }}">
-                                <div class="profile-logo-demo" style="margin:0; grid-row-start: 1; grid-row-end: 3;">
-                                    {% if notification.notifier.profile_photos %}
-                                        <img src="{{ full_url_for('base_path') }}/img/{{ notification.notifier.profile_photos.0.path }}">
-                                    {% else %}
-                                        <img src="{{ full_url_for('base_path') }}/img/def_avatar.jpeg">
+                                <div style="position: relative; grid-row-start: 1; grid-row-end: 3;">
+                                    <div class="profile-logo-demo" style="margin:0;">
+                                        {% if notification.notifier.profile_photos %}
+                                            <img src="/img/{{ notification.notifier.profile_photos.0.path }}">
+                                        {% else %}
+                                            <img src="/img/def_avatar.jpeg">
+                                        {% endif %}
+                                    </div>
+                                    {% if notification.notifier.last_activity|date_modify("+1 hour")|date("U") > "now"|date("U")  %}
+                                        <div style="background-color: white; position: absolute; padding: 4px; border-radius: 50%; top: 73%; left: 74%;">
+                                            <div class="notification-message-status"></div>
+                                        </div>
                                     {% endif %}
                                 </div>
                                 <h3 style="color: grey; align-self: flex-end;">{{ notification.notifier.user.username }}</h3>

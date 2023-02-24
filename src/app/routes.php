@@ -15,7 +15,6 @@ return function(App $app) {
         $group->post('/auth/activate', 'RegisterController:activate');
         $group->get('/auth/signin', 'AuthController:show_form')->setName('signin-get');
         $group->post('/auth/signin', 'AuthController:login')->setName('signin-post');
-        $group->get('/', 'HomeController:index')->setName('home');
     })->add(new GuestMiddleware($app->getContainer()));
 
     $app->group('', function(RouteCollectorProxy $group) use($app) {
@@ -46,7 +45,8 @@ return function(App $app) {
 
         $group->get('/chats', 'ChatController:index')->setName('chats-index');
         $group->get('/chats/{chat_id}', 'ChatController:show')->setName('chats-show')->add(new IsChatParticipantMiddleware($app->getContainer()));
-        $group->get('/chats/{chat_id}/messages', 'ChatController:getMessages')->setName('messages-index');
+
+        $group->get('/chats/{chat_id}/messages', 'MessageController:index')->setName('messages-index')->add(new IsChatParticipantMiddleware($app->getContainer()));
 
         $group->get('/notifications', 'NotificationController:index')->setName('notifications-index');
         $group->get('/notifications/{notification_id}', 'NotificationController:show')->setName('notifications-show');
@@ -58,6 +58,7 @@ return function(App $app) {
     })->add(new IsNativeUserMiddleware($app->getContainer()))->add(new AuthenticateMiddleware($app->getContainer()));
 
     $app->get('', function() {})->setName('base_path');
+    $app->get('/', 'HomeController:index')->setName('home');
     $app->post('/account_settings/reset_password', 'UserController:resetPassword')->setName('reset_password-post');
     $app->get('/change_email', 'UserController:sendActivationMail');
     $app->post('/change_email', 'UserController:changeMail');

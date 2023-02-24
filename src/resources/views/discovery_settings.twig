@@ -1,7 +1,7 @@
 {% extends 'layouts/base.twig' %}
 
 {% block headers %}
-<link href="{{ full_url_for('base_path') }}/css/no_ui_slider.css" rel="stylesheet">
+<link href="/css/no_ui_slider.css" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
     integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
     crossorigin=""/>
@@ -10,12 +10,12 @@
     integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
     crossorigin=""></script>
 
-<script type="text/javascript" src="{{ full_url_for('base_path') }}/js/map.js" defer></script>
+<script type="text/javascript" src="/js/map.js" defer></script>
 
-<script defer src="{{ full_url_for('base_path') }}/js/no_ui_slider.js"></script>
-<script defer src="{{ full_url_for('base_path') }}/js/discovery_settings.js"></script>
-<script defer src="{{ full_url_for('base_path') }}/js/multiselect.js"></script>
-<script defer src="http://localhost:8000/js/notification.js"></script>
+<script defer src="/js/no_ui_slider.js"></script>
+<script defer src="/js/discovery_settings.js"></script>
+<script defer src="/js/multiselect.js"></script>
+<script defer src="/js/notification.js"></script>
 {% endblock %}
 
 

@@ -24,7 +24,7 @@ git clone https://github.com/KSIISKYI/Matcha.git
 ```
 2. Move to root application directory:
 ```
-cd src/
+cd Matcha/src/
 ```
 3. Install composer:
 ```
