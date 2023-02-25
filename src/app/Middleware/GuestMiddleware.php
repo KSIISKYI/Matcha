@@ -9,7 +9,7 @@ use App\Models\User;
 
 class GuestMiddleware extends Middleware
 {
-    function __invoke(Request $request, RequestHandler $handler) {
+    public function __invoke(Request $request, RequestHandler $handler) {
         $response = $handler->handle($request);
 
         if (isset($_SESSION['user']) && User::find($_SESSION['user'])) {

@@ -10,8 +10,11 @@ use App\Models\User;
 
 class AuthenticateMiddleware extends Middleware
 {
-    function __invoke(Request $request, RequestHandler $handler) {
+    public function __invoke(Request $request, RequestHandler $handler) {
         if (isset($_SESSION['user']) && $user = User::find($_SESSION['user'])) {
+            $user->profile->last_activity = date("Y-m-d H:i:s", time());
+            $user->profile->save();
+
             $this->container->set('user', function() use($user) {
                 return $user;
             });

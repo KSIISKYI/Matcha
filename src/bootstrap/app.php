@@ -70,45 +70,51 @@ $app->setBasePath('');
 
 //Controllers initialization
 $container->set('RegisterController', function (Container $container) {
-    // retrieve the 'view' from the container
-    
     return new \App\Controllers\Auth\RegisterController($container);
 });
 
 $container->set('HomeController', function (Container $container) {
-    // retrieve the 'view' from the container
-    
     return new \App\Controllers\HomeController($container);
 });
 
 $container->set('ProfileController', function (Container $container) {
-    // retrieve the 'view' from the container
-    
     return new \App\Controllers\ProfileController($container);
 });
 
 $container->set('AuthController', function (Container $container) {
-    // retrieve the 'view' from the container
-    
     return new \App\Controllers\Auth\AuthController($container);
 });
 
 $container->set('ProfilePhotoController', function (Container $container) {
-    // retrieve the 'view' from the container
-    
     return new \App\Controllers\ProfilePhotoController($container);
 });
 
 $container->set('UserController', function (Container $container) {
-    // retrieve the 'view' from the container
-    
     return new \App\Controllers\UserController($container);
 });
 
 $container->set('GoogleAuthController', function (Container $container) {
-    // retrieve the 'view' from the container
-    
     return new \App\Controllers\GoogleAuthController($container);
+});
+
+$container->set('DiscoverySettingsController', function (Container $container) {
+    return new \App\Controllers\DiscoverySettingsController($container);
+});
+
+$container->set('MatchController', function (Container $container) {
+    return new \App\Controllers\MatchController($container);
+});
+
+$container->set('ChatController', function (Container $container) {
+    return new \App\Controllers\ChatController($container);
+});
+
+$container->set('NotificationController', function (Container $container) {
+    return new \App\Controllers\NotificationController($container);
+});
+
+$container->set('MessageController', function (Container $container) {
+    return new \App\Controllers\MessageController($container);
 });
 
 $routes = require_once __DIR__ . '/../app/routes.php';

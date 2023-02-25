@@ -61,11 +61,13 @@ class GoogleAuthService
             'is_google_auth' => true
         ]);
 
-        $user->profile()->create([
-            'fist_name' => $user_data['givenName'],
-            'last_name' => $user_data['familyName']
-        ]);
+        $profile = ProfileService::createProfile($user);
+        $profile->first_name = $user_data['givenName'];
+        $profile->last_name = $user_data['familyName'];
+        $profile->save();
 
+        mkdir(__DIR__ . '/../../public/img/profile_images/' . $profile->id, 0777);
+        
         return $user;
     }
 

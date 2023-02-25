@@ -1,0 +1,27 @@
+{% extends 'layouts/base.twig' %}
+
+{% block headers %}
+<link rel="stylesheet" type="text/css" href="/css/chat.css">
+<script defer src="/js/chat.js"></script>
+<script defer src="/js/moment.min.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="chat">
+            <div class="chat-header">
+            </div>
+            <div class="chat-body">
+            </div>
+            <form class="chat-sendmessage">
+            	<input id="message" mode="create" type="text" placeholder="Send message...">
+            	<button id="send_message">Send</button>
+                <div class="selected_message">
+                    <i class="fa-solid fa-pencil" style="padding: 7px; padding: 2px 6px 2px 15px;"></i>
+                    <div class="selected_message-inner"></div>
+                    <button class="selected_message-cancel">&times</button>
+                </div>
+            </from>
+        </div>
+    </div>
+{% endblock %}

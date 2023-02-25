@@ -1,0 +1,123 @@
+{% extends 'layouts/base.twig' %}
+
+{% block headers %}
+<link href="/css/no_ui_slider.css" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI="
+    crossorigin=""/>
+
+<script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-WBkoXOwTeyKclOHuWtc+i2uENFpDZ9YPdf5Hf+D7ewM="
+    crossorigin=""></script>
+
+<script type="text/javascript" src="/js/map.js" defer></script>
+
+<script defer src="/js/no_ui_slider.js"></script>
+<script defer src="/js/discovery_settings.js"></script>
+<script defer src="/js/multiselect.js"></script>
+<script defer src="/js/notification.js"></script>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <div class="discovery_settings">
+        <center><h1>Discovery Settings</h1></center>
+        <hr>
+
+        <form id="save" method="POST" action="{{ full_url_for('discovery_settings-post') }}">
+            <input type="hidden" name="csrf_name" value="{{ csrf_tokens.csrf_name }}">
+            <input type="hidden" name="csrf_value" value="{{ csrf_tokens.csrf_value }}">
+
+            <div class="form_grid">
+                <div class="form_option">
+                    <label for="Maximum distance">Maximum distance</label>
+                    <div id="max_distance_block" class="range"></div>
+                    <div class="slider_value">
+                        <p id="max_distance">{{ discovery_settings.max_distance }}</p>
+                    </div>
+                </div>
+
+                <div class="form_option">
+                    <label for="Maximum distance">Age Range</label>
+                    <div id="age_range" class="range"></div>
+                    <div class="slider_value">
+                        <p id="age_min">{{ discovery_settings.age_min }}</p>
+                        <p id="age_max">{{ discovery_settings.age_max }}</p>
+                    </div>
+                </div>
+
+                <div class="form_option">
+                    <label for="Maximum distance">Fame Rating Range</label>
+                    <div id="fame_rating_range" class="range"></div>
+                    <div class="slider_value">
+                        <p id="fame_rating_min">{{ discovery_settings.fame_rating_min }}</p>
+                        <p id="fame_rating_max">{{ discovery_settings.fame_rating_max }}</p>
+                    </div>
+                </div>
+
+                <div class="form_option">
+                    <hr>
+                </div>
+
+                <div class="form_option">
+                    <label for="Maximum distance">Looking For:</label>
+                    <select name="gender" class="field_select" style="display: block; position: static; padding: 12px 10px; margin-top: 20px">
+                        <option value="">Not selected</option>
+                        {% for gender in genders %}
+                            <option value="{{ gender.id }}"
+                            {% if gender.id == discovery_settings.gender.id %}
+                                selected
+                            {% endif %}
+                            >{{ gender.gender }}</option>        
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form_option">
+                    <label for="Maximum distance">Filter By Interests:</label>
+                    <div class="form_label">
+                        <div class="multiselect_block">
+                            <label for="select-1" class="field_multiselect">Interests</label>
+                            <input id="checkbox-1" class="multiselect_checkbox" type="checkbox">
+                            <label for="checkbox-1" class="multiselect_label"></label>
+                            <select id="select-1" class="field_select" name="interests[]" multiple>
+                                {% for interest in interests %}
+                                    <option value="{{ interest.id }}"
+                                    {% if interest.id in discovery_settings.interests.pluck('id') %}
+                                        selected
+                                    {% endif %}
+                                    >{{ interest.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form_option">
+                    <hr>
+                </div>
+                
+                <div class="form_option">
+                    <div id="map">
+                        <p style="margin-bottom: 15px;">Open the map</p>
+                        <i class="fa-solid fa-map-location-dot"></i>
+                    </div>
+                </div>
+
+                <div class="form_option">
+                    <button class="my_location" style="background: cadetblue;border-radius: 30px;">Manage My Location</button>
+                </div>
+
+                <div class="form_option">
+                    <hr>
+                </div>
+
+                <div class="form_option">
+                    <button>Save Settings</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -9,7 +9,7 @@ use Slim\Psr7\Response;
 
 class IsProfilePhotoCreatorMiddleware extends Middleware
 {
-    function __invoke(Request $request, RequestHandler $handler) {
+    public function __invoke(Request $request, RequestHandler $handler) {
         
         $args = RouteContext::fromRequest($request)->getRoute()->getArguments();
         $user = $this->container->get('user');

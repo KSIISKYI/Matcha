@@ -1,10 +1,10 @@
 {% extends 'layouts/base.twig' %}
 
 {% block headers %}
-<script defer src="{{ full_url_for('base_path') }}/js/form.js"></script>
-<script defer src="{{ full_url_for('base_path') }}/js/modal.js"></script>
+<script defer src="/js/form.js"></script>
+<script defer src="/js/modal.js"></script>
+<script defer src="/js/notification.js"></script>
 {% endblock %}
-
 
 {% block content %}
 
@@ -17,7 +17,13 @@
         <input type="hidden" name="csrf_value" value="{{ csrf_tokens.csrf_value }}">
 
         <label for="email"><b>Email</b></label>
-        <input type="text" placeholder="Enter Email" name="email" required value="{{ getUser().email }}"
+        <input type="text" placeholder="Enter Email" name="email" required 
+        {% if context.data.0.email %}
+            value="{{ context.data.0.email }}"
+        {% else  %}
+            value="{{ getProfile().user.email }}"
+        {% endif %}
+        
         {% if context.errors.0.email %}
             style="background-color: #ffdada; border: 2px solid red;">
             <div class="form_option_error">

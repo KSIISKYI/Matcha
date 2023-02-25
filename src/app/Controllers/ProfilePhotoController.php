@@ -9,14 +9,14 @@ use App\Service\ProfilePhotoService;
 
 class ProfilePhotoController extends Controller
 {
-    function store(Request $request, Response $response)
+    public function store(Request $request, Response $response)
     {
         ProfilePhotoService::create($request, $this->container);
 
         return $response;
     }
 
-    function destroy(Request $request, Response $response, $args)
+    public function destroy(Request $request, Response $response, $args)
     {
         ProfilePhotoService::remove($args['profile_image_id']);
 
