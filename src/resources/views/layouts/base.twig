@@ -4,12 +4,14 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ title }}</title>
-    <link rel="stylesheet" type="text/css" href="http://localhost:8000/css/style.css">
+    <title>Matcha</title>
+    <link rel="icon" href="/img/matcha_logo.png">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/notification.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
-    <script defer src="http://localhost:8000/js/main.js"></script>
+    <script defer src="/js/main.js"></script>
 
     {% block headers %}
     {% endblock %}
@@ -17,6 +19,11 @@
     <script src="https://kit.fontawesome.com/600e38d2f0.js" crossorigin="anonymous"></script>
 </head>
 <body>
+    <div class="notification-demo close">
+        <div class="notification-demo-inner">
+        </div>
+    </div>
+
     {% block modal %}
         <div class="modal">
             <div class="modal-content">
@@ -32,7 +39,7 @@
                             </div>
                             <div class="form_option">
                                 <label for="email"><b>Email</b></label>
-                                <input type="text" placeholder="Enter Email" name="email" required value={{ getUser().email }}>
+                                <input type="text" placeholder="Enter Email" name="email" required value={{ getProfile().user.email }}>
                             </div>
                             <div class="form_option">
                                 <button type="submit" style="font-size: 17px;font-weight: bold;">Send Password</button>
@@ -50,24 +57,24 @@
 
             <div class="burger-menu">
             <div class="burger-logo">
-                <p style="font-size: 30px; color: #ff445a; padding: 20px; margin-left: 45px;"><b>Matcha</b></p>
+                <p style="font-size: 30px; color: #ff445a; padding: 20px; margin-left: 45px; position: relative; top: 4px;"><b>Matcha</b></p>
             </div>
             
-            {% if getUser() %}
+            {% if getProfile() %}
                 <div class="burger-menu-profile">
                     <div class="profile-logo-demo">
-                        {% if getUser().profile.profile_photos.toArray() %}
-                            <img src="{{ full_url_for('base_path') }}/img/{{ getUser().profile.profile_photos.0.path }}">
+                        {% if getProfile().profile_photos %}
+                            <img src="/img/{{ getProfile().profile_photos.0.path }}">
                         {% else %}
-                            <img src="{{ full_url_for('base_path') }}/img/def_avatar.jpeg">
+                            <img src="/img/def_avatar.jpeg">
                         {% endif %}
                     </div>
         
                     <div class="">
-                        {{  getUser().profile.first_name }} {{  getUser().profile.last_name }}
+                        {{  getProfile().first_name }} {{  getProfile().last_name }}
                         <br>
                         <br>
-                        <p style="color: grey;">{{ getUser().username }}</p>
+                        <p style="color: grey;">{{ getProfile().user.username }}</p>
                     </div>
                 </div>
             {% endif %}
@@ -75,7 +82,7 @@
             <div class="burger-menu-list">
                 <p style="color: #ccc; padding:10px 20px; font-size: 16px;">MAIN NAVIGATION</p>
                 <div>
-                    {% if getUser() %}
+                    {% if getProfile() %}
                         <a href="{{ url_for('profile-index') }}">
                             <div class="menu-link"><i class="fa-regular fa-user"></i> &nbsp My Profile</div>
                         </a>
@@ -84,7 +91,7 @@
                             <div class="menu-link"><i class="fa-solid fa-sliders"></i> &nbsp Discovery Settings</div>
                         </a>
 
-                        {% if not getUser().is_google_auth %}
+                        {% if not getProfile().user.is_google_auth %}
                             <a href="{{ url_for('account_settings-get') }}">
                                 <div class="menu-link"><i class="fa-solid fa-gears"></i> &nbsp Account Settings</div>
                             </a>
@@ -92,9 +99,14 @@
                         <a href="{{ url_for('match-index') }}">
                             <div class="menu-link"><i class="fa-solid fa-fire"></i> &nbsp Find a Match</div>
                         </a>
+
+                        <a href="{{ url_for('my_matches-get') }}">
+                            <div class="menu-link"><i class="fa-solid fa-users-viewfinder"></i> &nbsp My Matches</div>
+                        </a>
                         
-                        <div class="menu-link"><i class="fa-solid fa-users-viewfinder"></i> &nbsp My Matches</div>
-                        <div class="menu-link"><i class="fa-solid fa-calendar"></i> &nbsp Activity Log</div>
+                        <a href="{{ url_for('activity_log-get') }}">
+                            <div class="menu-link"><i class="fa-solid fa-calendar"></i> &nbsp Activity Log</div>
+                        </a>
                     {% else %}
                          <a href="{{ full_url_for('signin-get') }}">
                             <div class="menu-link"><i class="fa-solid fa-right-to-bracket"></i> &nbsp Sign In </div>
@@ -102,7 +114,7 @@
                         <a href="{{ full_url_for('signup-get') }}">
                             <div class="menu-link"><i class="fa-solid fa-user-plus"></i> &nbsp Sign Up</div>
                         </a>
-                        <a href="{{ url_for('base_path') }}">
+                        <a href="/">
                             <div class="menu-link"><i class="fa-solid fa-house"></i> &nbsp Main Page</div>
                         </a>
                     {% endif %}
@@ -115,21 +127,37 @@
                 <button class="header__burger-btn" id="burger">
                     <span></span><span></span><span></span>
                 </button>
-                <p style="font-size: 30px; color: #ff445a; padding: 20px;"><b>Matcha</b></p>
+                <p style="font-size: 30px; color: #ff445a; padding: 20px;">
+                    <a href="{{ url_for('home') }}">
+                        <b>Matcha</b>
+                    </a>
+                </p>
             </div>
             <div class="nav-bar">
-                {% if getUser() %}
-                    <a href="#" class="nav-link">
+                {% if getProfile() %}
+                    <a href="{{ url_for('notifications-index') }}" class="nav-link">
                         <i class="fa-regular fa-bell" id="notification">
-                            <span class="amount" style="background-color:#ecbe14"><b>3</b></span> 
+                            {% set count_unreviewed_notifications = getProfile().count_unreviewed_notifications %}
+                            <span class="amount" id="notification_count" style="background-color:#C14D4B;
+                                {% if count_unreviewed_notifications %}
+                                    ">{{ count_unreviewed_notifications }}</span>
+                                {% else %}
+                                    display:none;">0</span>
+                                {% endif %}
+                            
+                            
+                            
                         </i> 
                     </a>
-                    <a href="#" class="nav-link">
+                    <a href="{{ url_for('chats-index') }}" class="nav-link">
                         <i class="fa-regular fa-comment" id="messages">
-                            <span class="amount" style="background-color:#C14D4B"><b>6</b></span>
+                            {% set count_unreviewed_messages = getProfile().count_unreviewed_messages %}
+                            {% if count_unreviewed_messages %}
+                                <span class="amount" style="background-color:#ecbe14"><b>{{ count_unreviewed_messages }}</b></span>
+                            {% endif %}
                         </i>
                     </a>
-                    <a href="{{ url_for('signout-get') }}" class="nav-link" style="font-size:20px;">
+                    <a href="{{ url_for('signout-get') }}" class="nav-link menu-link" style="font-size:20px;">
                         Logout
                     </a>
                 {% else %}

@@ -1,7 +1,7 @@
 {% extends 'layouts/base.twig' %}
 
 {% block headers %}
-<script defer src="http://localhost:8000/js/form.js"></script>
+<script defer src="/js/form.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -79,15 +79,15 @@
                 </div>
 
                 <div class="form_option">
-                    <div style="display: flex; justify-content: center; position: relative;">
-                        <div style="width: 100%;border: 1px solid #ccc;position:relative;"></div>
-                        <p style="position: absolute;padding: 0 20px;top: -6px;background: white;color: grey;">OR</p>
+                    <div class="separator_line">
+                        <div class="line"></div>
+                        <p class="separator_text">OR</p>
                     </div>
                 </div>
 
                 <div class="form_option">
                     <button style="background: #dedede; font-size: 17px;font-weight: bold; color:#5c5c5c" id='google_auth' value="{{ google_code }}">
-                        <img src="{{ full_url_for('base_path') }}/img/google.png" style="width:25px; height: auto; margin-right: 5px; vertical-align: -6px">
+                        <img src="/img/google.png" style="width:25px; height: auto; margin-right: 5px; vertical-align: -6px">
                         Continue with Google
                     </button>
                 </div>

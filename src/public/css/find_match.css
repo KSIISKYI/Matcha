@@ -130,3 +130,19 @@
 .fa-remove {
   color: #CDD6DD;
 }
+
+.profiles_grid {
+  margin: 20px; display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
+  width: 50%;
+  font-size: 1vw;
+}
+
+.profile_like {
+  position: absolute;
+  right: 0;
+  margin: 15px;
+  color: #ff5d5d;
+  font-size: 2vw;
+}

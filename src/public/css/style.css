@@ -17,7 +17,7 @@ a {
     background-color: #95b9a359;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    /* justify-content: space-between; */
 }
 
 
@@ -68,6 +68,7 @@ a {
     border-radius: 5px;
     padding: 4px 6px;
     color: white;
+    font-weight: bolder;
 }
 
 /* ================= CONTENT ================= */
@@ -75,7 +76,10 @@ a {
 .content {
     width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    min-height: 87vh;
 }
 
 /* .content > div {
@@ -193,6 +197,30 @@ span.psw {
     text-align: center;
 }
 
+.separator_line {
+    display: flex; 
+    justify-content: center; 
+    position: relative;
+    /* margin: 10px 0; */
+    color: grey;
+    font-weight: bold;
+    /* font-size: 20px */
+}
+
+.separator_line > .line {
+    width: 100%;
+    border: 1px solid #ccc;
+    position:relative;
+}
+
+.separator_line > .separator_text {
+    position: absolute;
+    padding: 0 20px;
+    top: -7px;
+    background: white;
+    color: grey;
+}
+
 
 /* ================= BURGER MENU ================= */
 
@@ -304,6 +332,7 @@ span.psw {
 
 .footer {
     width: 100%;
+    margin-top: auto;
     background-color: white;
     text-align: center;
     padding: 10px;
@@ -663,8 +692,6 @@ select:hover {
     margin: 50px 0 30px;
 }
 
-
-
 .img_wrapper {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -760,7 +787,7 @@ textarea:focus {
     top: 100px;
     z-index: 3;
     transform: translateY(0);
-    transition: transform 0.5s;
+    transition: transform 0.8s;
 }
 
 .modal_message.close {
@@ -769,7 +796,7 @@ textarea:focus {
 
 .modal {
     position: fixed;
-    z-index: 3;
+    z-index: 4;
     background-color: rgb(0, 0, 0, 0.5);
     width: 100%;
     height: 100%;
@@ -810,31 +837,65 @@ textarea:focus {
     background-color: rgb(255, 255, 255, 0.1);
 }
 
+/* ================ PAGINATION ================  */
 
+.pgn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    margin: 10px;
+}
 
+.pgn__cell {
+    background-color: #95B9A3;
+    margin: 0 10px;
+    padding: 7px 15px;
+    border-radius: 3px;
+    color: #ebfbff;
+    transition: .3s;
+}
 
+.pgn__cell_press {
+    opacity: 0.7;
+}
 
+.pgn a:hover .pgn__cell{
+    opacity: 0.7;
+}
 
+/* ================ HOME PAGE ================  */
 
+.home_container {
+    display: flex;
+    width: 100%;
+    background-color: white;
+    border-radius: 10px;
+    padding: 50px;
+    flex-direction: column;
+    align-items: center;
+    color: #5c5c5c;
+    padding-top: 60px;
+}
 
+.home_container h1, h2 {
+    color: black;
+}
 
+.home_container-option {
+    width: 100%;
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-gap: 20px;
+}
 
+.home_container-option .inner {
+    margin-left: 5%;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.img_block {
+    width: 50%;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    overflow: hidden;
+}
