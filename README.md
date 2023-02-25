@@ -19,6 +19,16 @@ the profile of other users, like them, chat with those that “liked” back.
 
 :point_right: Chat management (create message, edit message, delete message)
 
+<img src="/screenshots/screenshot1.png" alt="project screenshot" title="project screenshot 1" width="700">
+<img src="/screenshots/screenshot2.png" alt="project screenshot" title="project screenshot 1" width="700">
+<img src="/screenshots/screenshot3.png" alt="project screenshot" title="project screenshot 1" width="700">
+<img src="/screenshots/screenshot4.png" alt="project screenshot" title="project screenshot 1" width="700">
+<img src="/screenshots/screenshot5.png" alt="project screenshot" title="project screenshot 1" width="700">
+<img src="/screenshots/screenshot6.png" alt="project screenshot" title="project screenshot 1" width="700">
+<img src="/screenshots/screenshot7.png" alt="project screenshot" title="project screenshot 1" width="700">
+<img src="/screenshots/screenshot8.png" alt="project screenshot" title="project screenshot 1" width="700">
+<img src="/screenshots/matcha_presentation.gif" alt="project screenshot" title="project screenshot 1" width="700">
+
 ## Installation:
 1. Clone the repository:
 ```
