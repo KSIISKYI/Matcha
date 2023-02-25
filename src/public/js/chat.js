@@ -74,9 +74,10 @@ function appendMessage(message_data, end=true)
 
 function createHTMLMessageElement(message_data)
 {
-    let time = moment((new Date(message_data.created_at))).format('L LT');
+    let time = moment(message_data.updated_at);
     let class_message = message_data.participant_id === data.my_participant.id ? 'own' : '';
     let profile_photo;
+    let status = message_data.updated_at == message_data.created_at ? '' : 'Сhanged ';
     
     if (class_message == 'own') {
         profile_photo = data.my_participant.profile.profile_photos.length > 0 ? 
@@ -97,53 +98,53 @@ function createHTMLMessageElement(message_data)
                 <div class="chat-message-context-inner">
                     ${message_data.message}
                 </div>
-                <div class='message-options' style="right: ${class_message ? 0 : 'auto'};">
-                    <i id="edit_message" 
-                        class="fa-solid fa-pencil"
-                        message_id="${message_data.id}"></i>
-                    <i id="remove_message" 
-                        class="fa-solid fa-trash"
-                        message_id="${message_data.id}"
-                        style="color: #ff0000d9;"></i>
-                </div>
             </div>
 
-            <div class="chat-message-time">${time}</div>
+            <div class="chat-message-time" data="${time.format('L LT')}">${status}${time.format('HH:mm')}</div>
         </div>
     `)
 
     if (class_message) {
-        initMessageOprtions(message_element);
+        initMessageOprtions(message_element, message_data);
     }
 
     return message_element;
 }
 
-function initMessageOprtions(message_element)
+function initMessageOprtions(message_element, message_data)
 {
-    let message_context = message_element.querySelector('.chat-message-context-inner');
-    let edit_message = message_element.querySelector('#edit_message');
-    let remove_message = message_element.querySelector('#remove_message');
+    let message_context = message_element.querySelector('.chat-message-context');
+    let message_context_inner = message_context.querySelector('.chat-message-context-inner');
+    let class_message = message_data.participant_id === data.my_participant.id ? 'own' : '';
+    let options_block = htmlToElement(`<div class='message-options' style="right: ${class_message ? 0 : 'auto'};"></div>`);
+    let edit_message = htmlToElement(`<i id="edit_message" class="fa-solid fa-pencil" message_id="${message_data.id}"></i>`);
+    let remove_message = htmlToElement(`<i id="remove_message" class="fa-solid fa-trash" message_id="${message_data.id}" style="color: #ff0000d9;"></i>`);
 
-    message_context.onclick = function(event) {
+    message_context.appendChild(options_block);
+    message_context_inner.onclick = function(event) {
         event.stopPropagation();
         closeAllOptions();
 
-        let options = this.parentElement.querySelector('.message-options');
-        options.style.height = '70%';
+        options_block.style.height = '70%';
     }
 
-    edit_message.onclick = function(e) {
-        message.value = message_context.innerHTML.trim();
-        message.setAttribute('mode', 'update');
-        message.setAttribute('message_id', this.getAttribute('message_id'));
-        
-        let selected_message_inner = selected_message.querySelector('.selected_message-inner');
-        selected_message.style.height = 'auto';
-        selected_message_inner.innerHTML = message_context.innerHTML.trim();
+    if (!getDiffTimeZone(moment(), moment(message_data.updated_at))) {
+        options_block.appendChild(edit_message);
 
-        checkLengthMessage();
+        edit_message.onclick = function(e) {
+            message.value = message_context_inner.innerHTML.trim();
+            message.setAttribute('mode', 'update');
+            message.setAttribute('message_id', this.getAttribute('message_id'));
+            
+            let selected_message_inner = selected_message.querySelector('.selected_message-inner');
+            selected_message.style.height = 'auto';
+            selected_message_inner.innerHTML = message_context_inner.innerHTML.trim();
+    
+            checkLengthMessage();
+        }
     }
+
+    options_block.appendChild(remove_message);
 
     remove_message.onclick = function(event) {
         sendMessage(this.getAttribute('message_id'), 'delete');
@@ -272,11 +273,16 @@ async function run()
                 break;
             case 'update':
                 let m = chat_body.querySelector(`#msg${message_data.message.id}`);
-                let m_i = m.querySelector('.chat-message-context-inner')
+                let m_i = m.querySelector('.chat-message-context-inner');
+                let status = message_data.message.created_at == message_data.message.updated_at ? '' : 'Changed ';
+                let m_time = m.querySelector('.chat-message-time');
+                m_time.innerHTML = status + moment(message_data.message.updated_at).format('HH:mm');
                 m_i.innerHTML = message_data.message.message;
                 break;
             case 'delete':
                 chat_body.querySelector(`#msg${message_data.message}`).remove();
+                removeTimeZones(chat_body);
+                setTimeZones(chat_body, 'chat-message', '.chat-message-time');
         }
 
         

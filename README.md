@@ -15,7 +15,9 @@ the profile of other users, like them, chat with those that “liked” back.
 
 :point_right: Custom search
 
-:point_right: User managment (create user, send confirmation email, edit profile, upload files, authorization)
+:point_right: User management (create user, send confirmation email, edit profile, upload files, authorization)
+
+:point_right: Chat management (create message, edit message, delete message)
 
 ## Installation:
 1. Clone the repository:

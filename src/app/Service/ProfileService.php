@@ -16,7 +16,12 @@ class ProfileService
     public static function createProfile(User $user)
     {
         $discovery_settings = DiscoverySetting::create();
-        $profile = Profile::create(['user_id' => $user->id, 'discovery_settings_id' => $discovery_settings->id]);
+        $profile = Profile::create([
+            'user_id' => $user->id, 
+            'discovery_settings_id' => $discovery_settings->id, 
+            'position_x' => 50.450001,
+            'position_y' => 31.523333
+        ]);
 
         return $profile;
     }

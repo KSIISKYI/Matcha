@@ -22,22 +22,4 @@ class MessageController extends Controller
 
         return $response;
     }
-
-    // public function update(Request $request, Response $response, $args)
-    // {
-    //     $my_profile = $this->container->get('user')->profile;
-    //     $data = $request->getParsedBody();
-    //     $new_context = isset($data['new_context']) ? $data['new_context'] : '';
-    //     MessageService::updateMessage($args['message_id'], $args['chat_id'], $new_context, $my_profile);
-
-    //     return $response;
-    // }
-
-    // public function destroy(Request $request, Response $response, $args)
-    // {
-    //     $my_profile = $this->container->get('user')->profile;
-    //     MessageService::removeMessage($args['message_id'], $args['chat_id'], $my_profile);
-
-    //     return $response;
-    // }
 }

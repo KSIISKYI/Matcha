@@ -69,7 +69,9 @@ class Chat implements MessageComponentInterface {
             if ($data_msg->from == $client->resourceId && $client->type_connection != 'notification' || $data_msg->to == $client->resourceId and $data_msg->type == $client->type_connection) {
                 
                 if ($client->resourceId == $data_msg->to && $data_msg->type == 'chat' && $data_msg->mode != 'delete') {
-                    $msg['message']->update(['reviewed' => true]);
+                    $msg['message']->timestamps = false;
+                    $msg['message']->reviewed = true;
+                    $msg['message']->save();
                 }
 
                 if (gettype($msg['message']) == 'object') {

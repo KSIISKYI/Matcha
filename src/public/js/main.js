@@ -69,7 +69,7 @@ function setTimeZones(body, needed_class, time_class)
 
                 switch (getDiffTime2(
                         moment(),
-                        moment(messages[i].querySelector(time_class).innerHTML),
+                        moment(messages[i].querySelector(time_class).getAttribute('data')),
                 )) {
                     case 0:
                         res = "Today";
@@ -78,9 +78,9 @@ function setTimeZones(body, needed_class, time_class)
                         res = "Yesterday";
                         break;
                     default :
-                        res = moment(messages[i].querySelector(time_class).innerHTML).format('L');
+                        res = moment(messages[i].querySelector(time_class).getAttribute('data')).format('L');
                 }
-                
+        
                 insertTimeZone(messages[i], body, res);
                 break;
             }
@@ -89,8 +89,8 @@ function setTimeZones(body, needed_class, time_class)
         let res = null;
 
         switch (getDiffTimeZone(
-                moment(messages[i].querySelector(time_class).innerHTML),
-                moment(messages[i+1].querySelector(time_class).innerHTML),
+                moment(messages[i].querySelector(time_class).getAttribute('data')),
+                moment(messages[i+1].querySelector(time_class).getAttribute('data')),
             )) {
             case 0:
                 break;
@@ -101,7 +101,7 @@ function setTimeZones(body, needed_class, time_class)
                 res = "Yesterday";
                 break;
             case 3:
-                res = moment(messages[i].querySelector(time_class).innerHTML).format('L')
+                res = moment(messages[i].querySelector(time_class).getAttribute('data')).format('L')
         }
 
         if (res && [...messages[i].previousElementSibling.classList].includes(needed_class)) {

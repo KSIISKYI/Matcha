@@ -36,7 +36,9 @@
                                     {% endif %}
                                 </div>
                                 <h3 style="color: grey; align-self: flex-end;">{{ notification.notifier.user.username }}</h3>
-                                <div class="notification-time" style="color: #ccc; align-self: flex-end;">{{ notification.created_at|date("Y-m-d H:i") }}</div>
+                                <div class="notification-time" style="color: #ccc; align-self: flex-end;" data="{{ notification.created_at|date("Y-m-d H:i") }}">
+                                    {{ notification.created_at|date("H:i") }}
+                                </div>
                                 <p style="color: #ccc; font-size: 19px; align-self: flex-start;">
                                     {% if notification.event_id == 1 %}
                                         Liked you <i class="fa-solid fa-heart" style="color: #ff0000ba;"></i>

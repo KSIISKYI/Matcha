@@ -12,6 +12,7 @@ class MessageService
         $messages = Chat::find($args['chat_id'])->messages()->orderBy('id', 'desc')->paginate(7, ['*'], 'page', $page);
         $messages->flatMap(function($el) use($my_profile) {
             if (!in_array($el->participant_id, $my_profile->participants->pluck('id')->toArray())) {
+                $el->timestamps = false;
                 $el->reviewed = true;
                 $el->save();
             }
