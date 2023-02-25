@@ -2,29 +2,26 @@
 
 namespace App\Service;
 
+use Illuminate\Database\Eloquent\Collection;
+
 class Paginator
 {
 	private $pages_count;
 	private $step;
-	private $curret_page_number;
 	private $data;
 
-	function __construct(array $data, int $step)
+	function __construct(Collection $data, int $step)
 	{
 		$this->data = $data;
 		$this->step = $step;
-		$this->pages_count = ceil(count($data) / $step);
+		$this->pages_count = ceil($data->count() / $step);
 	}
 
 	function getData(int $page_number)
 	{
-		if ($page_number > $this->pages_count) {
-			return [];
-		}
-
 		$start = $page_number == 1 ? 0 : $page_number * $this->step - $this->step;
 
-		return array_slice($this->data, $start, $this->step);
+		return $this->data->skip($start)->take($this->step)->toArray();
 	}
 
 	function getPageObj($page_number)

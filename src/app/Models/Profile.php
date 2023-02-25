@@ -10,6 +10,7 @@ class Profile extends Model
 
     protected $guarded = ['id'];
     public $timestamps = false;
+    protected $appends = ['count_unreviewed_messages'];
     protected $with = array('user', 'profile_photos');
 
     public function user()
@@ -77,5 +78,28 @@ class Profile extends Model
     public function fake_profiles()
     {
         return $this->belongsToMany(Profile::class, 'fake_profile_reports', 'reporter', 'fake_profile');
+    }
+
+    public function participants()
+    {
+        return $this->hasMany(Participant::class);
+    }
+
+    public function getCountUnreviewedMessagesAttribute()
+    {
+        $my_profile = Profile::find($this->id);
+        $res = 0;
+
+        foreach($my_profile->participants as $participant) {
+            $chat = $participant->chat;
+            $res += $chat->messages->where('reviewed', false)->where('participant_id', '!=' ,$participant->id)->count();
+        }
+
+        return $res;
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'notified_id', 'id');
     }
 }

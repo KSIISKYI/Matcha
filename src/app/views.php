@@ -7,21 +7,27 @@ use Slim\Views\Twig;
 use Twig\TwigFunction;
 use Twig\Extension\AbstractExtension;
 
-use App\Models\User;
+use App\Models\Profile;
 
 class AssetExtension extends AbstractExtension
 {
     function getFunctions()
     {
         return [
-            new TwigFunction('getUser', [$this, 'getUser'])
+            new TwigFunction('getProfile', [$this, 'getProfile'])
         ];
     }
 
-    function getUser()
+    function getProfile()
     {
         if (isset($_SESSION['user'])) {
-            return User::find($_SESSION['user']);
+            $profile =  Profile::where('user_id', $_SESSION['user'])
+                ->withCount(['notifications as count_unreviewed_notifications' => function($query) {
+                    $query->where('reviewed', false);
+                }])
+                ->first();
+
+            return $profile->toArray();
         }
     }
 }

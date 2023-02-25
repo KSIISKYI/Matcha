@@ -65,6 +65,8 @@ class GoogleAuthService
         $profile->first_name = $user_data['givenName'];
         $profile->last_name = $user_data['familyName'];
         $profile->save();
+
+        mkdir(__DIR__ . '/../../public/img/profile_images/' . $profile->id, 0777);
         
         return $user;
     }

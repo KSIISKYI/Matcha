@@ -1,8 +1,9 @@
 {% extends 'layouts/base.twig' %}
 
 {% block headers %}
-<script defer src="{{ full_url_for('base_path') }}/js/edit_profile.js"></script>
-<script defer src="{{ full_url_for('base_path') }}/js/multiselect.js"></script>
+<script defer src="/js/edit_profile.js"></script>
+<script defer src="/js/multiselect.js"></script>
+<script defer src="/js/notification.js"></script>
 {% endblock %}
 
 
@@ -27,7 +28,7 @@
                 {% endif %}
 
                 {% if profile_photos[i] %}
-                    <img src="{{ full_url_for('base_path') }}/img/{{ profile_photos[i].path }}" value="{{ profile_photos[i].id }}">
+                    <img src="/img/{{ profile_photos[i].path }}" value="{{ profile_photos[i].id }}">
                     <span class="rm_img">&times;</span>
                 {% else %}
                     <div class="add_img">
