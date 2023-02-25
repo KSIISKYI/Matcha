@@ -26,12 +26,11 @@ class ChatService
         return $participant;
     }
 
-    public static function getChats(Container $container)
+    public static function getChats(Profile $profile)
     {
-        $my_profile = $container->get('user')->profile;
         $chats = new Collection;
         
-        foreach($my_profile->participants as $participant) {
+        foreach($profile->participants as $participant) {
             $chat = $participant->chat;
 
             $chat->other_participant = ($other = $chat->participants->first())->id == $participant->id ? 

@@ -4,47 +4,14 @@ namespace App\Controllers;
 
 use Slim\Psr7\Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Illuminate\Support\Collection;
-
-use App\Models\{Chat, User, Profile};
-use App\Service\ProfileService;
+use Slim\Views\Twig;
 
 class HomeController extends Controller
 {
     public function index(Request $request, Response $response)
     {
-        $my_profile = Profile::find(1);
-        
+        $view = Twig::fromRequest($request);
 
-
-
-
-
-
-
-
-
-
-        // $profiles_query = Profile::selectRaw('*,
-        //             calcFameRating(fame_rating) as fame_rating_percent,
-        //             calcCrow(position_x, position_y, :my_position_x, :my_position_y) as distance,
-        //             id in (:matches) as \'match\',
-        //             id in (:liked) as liked',
-        //         [
-        //             'my_position_x' => $my_profile->position_x,
-        //             'my_position_y' => $my_profile->position_y,
-        //             'matches' => implode(' ,', $my_profile->interesting_profiles->intersect($my_profile->interested_profiles)->pluck('id')->reverse()->toArray()),
-        //             'liked' =>  implode(' ,', $my_profile->interesting_profiles->pluck('id')->toArray()),
-        //         ]
-        //     )
-        //     ->whereRaw('id <> 1');
-
-        echo '<pre>';
-        print_r($my_profile->toArray());
-        echo '</pre>';
-
-
-
-        // return $response;
+        return $view->render($response, 'home.twig');
     }
 }

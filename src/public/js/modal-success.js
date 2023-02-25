@@ -23,12 +23,12 @@ block_button.onclick = (e) => {
     modal.style.display = 'flex';
     setTimeout(() => { modal_message.classList.remove('close') }, 500);
 
-    if (e.target.getAttribute('blocked')) {
+    if (e.target.getAttribute('blocked') == '1') {
         fetch(e.target.getAttribute('unblock-action')).then(response => {
             if (response.status === 200) {
                 e.target.style.backgroundColor = '#ff0000a3';
                 e.target.innerHTML = 'Block';
-                e.target.setAttribute('blocked', '');
+                e.target.setAttribute('blocked', 0);
             }
         });
     } else {

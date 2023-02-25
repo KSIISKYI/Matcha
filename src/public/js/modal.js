@@ -22,7 +22,7 @@ document.querySelector('#reset_password').addEventListener('submit', function(e)
 	e.preventDefault();
 
 	let data = new FormData(e.target);
-	fetch('http://localhost:8000/account_settings/reset_password', {
+	fetch('/account_settings/reset_password', {
 		method: 'POST',
 		body: data
 	})

@@ -3,18 +3,25 @@ namespace App\Service;
 
 use DI\Container;
 use Illuminate\Database\Capsule\Manager as Capsule;
-
-use App\Models\{Profile, User, DiscoverySetting, ReviewedProfile};
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Collection as SupportCollection;
+
+
+use App\Models\{Profile, User, DiscoverySetting, ReviewedProfile};
+use App\Service\Chat\ChatService;
+
 
 class ProfileService
 {
     public static function createProfile(User $user)
     {
         $discovery_settings = DiscoverySetting::create();
-        $profile = Profile::create(['user_id' => $user->id, 'discovery_settings_id' => $discovery_settings->id]);
+        $profile = Profile::create([
+            'user_id' => $user->id, 
+            'discovery_settings_id' => $discovery_settings->id, 
+            'position_x' => 50.450001,
+            'position_y' => 31.523333
+        ]);
 
         return $profile;
     }
@@ -99,8 +106,6 @@ class ProfileService
         $blockers = implode(', ', !empty($blockers = $my_profile->blockers->pluck('id')->toArray()) ? $blockers : [-1]);
         $fake_profiles = implode(', ', !empty($fake_profiles = $my_profile->fake_profiles->pluck('id')->toArray()) ? $fake_profiles : [-1]);
 
-        // var_dump($position_x, $position_y, $matches, $liked, $blocked_profiles, $blockers, $fake_profiles);
-
         $profile_query = Profile::selectRaw("*,
                     calcFameRating(fame_rating) as fame_rating_percent, 
                     calcCrow(position_x, position_y, $position_x, $position_y) as distance,
@@ -175,9 +180,15 @@ class ProfileService
     public static function blockProfile(Container $container, $data)
     {
         $my_profile = $container->get('user')->profile;
+        $chat = ChatService::getChats($my_profile)->intersect(ChatService::getChats(Profile::find($data['profile_id'])))->first();
 
         try { 
             $my_profile->blocked_profiles()->syncWithoutDetaching(['blocked' => $data['profile_id']]);
+            $my_profile->interesting_profiles()->detach(['blocked' => $data['profile_id']]);
+
+            if ($chat) {
+                $chat->delete();
+            }
         } catch (\Illuminate\Database\QueryException $ex) {
             return false;
         }

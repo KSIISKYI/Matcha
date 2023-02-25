@@ -11,15 +11,15 @@ function modal_init(my_profile, another_profile) {
 			<p style="margin: 20px 0 0;">You and ${another_profile.user.username} have liked each other.</p>
 			<div style="display:flex; justify-content: space-between; margin: 30px 0; width: 100%; align-items: center;">
 				<div class="profile-logo-demo" style="width: 200px; height: 200px; border: 3px solid white;">
-					<img src="http://localhost:8000/img/${my_profile_photo}">
+					<img src="/img/${my_profile_photo}">
 				</div>
 				<div style="color: #FD6F70; font-size: 0px">
 					<i class="fa-solid fa-heart"></i>
 				</div>
 				<div class="profile-logo-demo" style="width: 200px; height: 200px; border: 3px solid white;">
-					<img src="http://localhost:8000/img/${another_profile_photo}"></div>
+					<img src="/img/${another_profile_photo}"></div>
 				</div>
-			<a href="#" style="width: 50%;"><div class="match_button">go to chat</div></a>
+			<a href="/chats/${another_profile.new_chat.id}" style="width: 50%;"><div class="match_button">go to chat</div></a>
 		</div>`
     );
 

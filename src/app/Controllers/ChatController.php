@@ -16,7 +16,7 @@ class ChatController extends Controller
     {
         $data = $request->getQueryParams();
         $view = Twig::fromRequest($request);
-        $chats = ChatService::getChats($this->container);
+        $chats = ChatService::getChats($this->container->get('user')->profile);
         $paginator = new Paginator(
             $chats,
             5
@@ -59,7 +59,7 @@ class ChatController extends Controller
             return $response;
         }
 
-        return $view->render($response, 'chat/show2.twig');
+        return $view->render($response, 'chat/show.twig');
     }
 
     public function getMessages(Request $request, Response $response, $args)

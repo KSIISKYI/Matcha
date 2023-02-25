@@ -1,15 +1,14 @@
 {% extends 'layouts/base.twig' %}
 
 {% block headers %}
-<script defer src="{{ full_url_for('base_path') }}/js/form.js"></script>
-<script defer src="{{ full_url_for('base_path') }}/js/modal.js"></script>
+<script defer src="/js/form.js"></script>
+<script defer src="/js/modal.js"></script>
 {% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="form">
         <center><h1>Login</h1></center>
-        {{ getUser() }}
 
         <form action="{{ url_for('signin-post') }}" method="POST">
             <div class="form_grid">
@@ -57,7 +56,7 @@
 
                 <div class="form_option">
                     <button style="background: #dedede; font-size: 17px;font-weight: bold; color:#5c5c5c" id='google_auth' value="{{ google_code }}">
-                        <img src="{{ full_url_for('base_path') }}/img/google.png" style="width:25px; height: auto; margin-right: 5px; vertical-align: -6px">
+                        <img src="/img/google.png" style="width:25px; height: auto; margin-right: 5px; vertical-align: -6px">
                         Continue with Google
                     </button>
                 </div>
