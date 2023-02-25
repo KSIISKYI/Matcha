@@ -1,0 +1,111 @@
+{% extends 'layouts/base.twig' %}
+
+{% block headers %}
+<script defer src="/js/form.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="form">
+        <center><h1>Registration</h1></center>
+
+        <form action="{{ url_for('signup-post') }}" method="POST">
+
+            <div class="form_grid">
+                <div class="form_option">
+                    <label for="user_name"><b>Username</b></label>
+                    <input type="text" placeholder="Enter Username" name="username" required value="{{ data.0.username }}"
+                    {% if errors.0.username %}
+                        style="background-color: #ffdada; border: 2px solid red;">
+                        <div class="form_option_error">
+                            {% for error in errors.0.username %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    >
+                    {% endif %}  
+                </div>
+                
+                <div class="form_option">
+                    <label for="email"><b>Email</b></label>
+                    <input type="text" placeholder="Enter Email" name="email" required value="{{ data.0.email }}"
+                    {% if errors.0.email %}
+                        style="background-color: #ffdada; border: 2px solid red;">
+                        <div class="form_option_error">
+                            {% for error in errors.0.email %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    >
+                    {% endif %} 
+                </div>
+
+                <div class="form_option">
+                    <i class="fa-regular fa-eye show_pass" id="show_pass"></i>
+                    <label for="password"><b>Password</b></label>
+                    <input type="password" placeholder="Enter Password" name="password" required value="{{ data.0.password }}"
+                    {% if errors.0.password %}
+                        style="background-color: #ffdada; border: 2px solid red;">
+                        <div class="form_option_error">
+                            {% for error in errors.0.password %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    >
+                    {% endif %} 
+                </div>
+
+                <div class="form_option">
+                    <i class="fa-regular fa-eye show_pass" id="show_conf_pass"></i>
+                    <label for="uname"><b>Confirm Password</b></label>
+                    <input type="password" placeholder="Enter Confirm Password" name="confirm_password" required value="{{ data.0.confirm_password }}"
+                    {% if errors.0.confirm_password %}
+                        style="background-color: #ffdada; border: 2px solid red;">
+                        <div class="form_option_error">
+                            {% for error in errors.0.confirm_password %}
+                                <p>{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                    >
+                    {% endif %} 
+                </div>
+
+                <div class="form_option">
+                    <button type="submit" style="font-size: 17px; font-weight: bold;">Sign Up</button>
+                </div>
+
+                <div class="form_option">
+                    <div class="separator_line">
+                        <div class="line"></div>
+                        <p class="separator_text">OR</p>
+                    </div>
+                </div>
+
+                <div class="form_option">
+                    <button style="background: #dedede; font-size: 17px;font-weight: bold; color:#5c5c5c" id='google_auth' value="{{ google_code }}">
+                        <img src="/img/google.png" style="width:25px; height: auto; margin-right: 5px; vertical-align: -6px">
+                        Continue with Google
+                    </button>
+                </div>
+
+            </div>
+
+        </form>
+
+        {% if message %}
+        <div class="form_message">
+            <p>{{ message.0 }}</p>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="form">
+        <a class="color_form" href="{{ url_for('signin-get') }}">Do you have an account? Sign in</a>
+    </div>
+</div>
+{% endblock %}
+

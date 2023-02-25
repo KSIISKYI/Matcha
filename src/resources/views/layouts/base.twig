@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matcha</title>
+    <link rel="icon" href="/img/matcha_logo.png">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
+    <link rel="stylesheet" type="text/css" href="/css/notification.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+    <script defer src="/js/main.js"></script>
+
+    {% block headers %}
+    {% endblock %}
+
+    <script src="https://kit.fontawesome.com/600e38d2f0.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class="notification-demo close">
+        <div class="notification-demo-inner">
+        </div>
+    </div>
+
+    {% block modal %}
+        <div class="modal">
+            <div class="modal-content">
+                <div class="modal_message close">
+                    <form id="reset_password">
+                        <div class="form_grid">
+                            <div class="form_option">
+                                <h2>Reset your password</h2>
+                                <hr>
+                            </div>
+                            <div class="option">
+                                We can send new randomly genereted password on your email.
+                            </div>
+                            <div class="form_option">
+                                <label for="email"><b>Email</b></label>
+                                <input type="text" placeholder="Enter Email" name="email" required value={{ getProfile().user.email }}>
+                            </div>
+                            <div class="form_option">
+                                <button type="submit" style="font-size: 17px;font-weight: bold;">Send Password</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    <div class="page">
+        
+        <div class="header">
+
+            <div class="burger-menu">
+            <div class="burger-logo">
+                <p style="font-size: 30px; color: #ff445a; padding: 20px; margin-left: 45px; position: relative; top: 4px;"><b>Matcha</b></p>
+            </div>
+            
+            {% if getProfile() %}
+                <div class="burger-menu-profile">
+                    <div class="profile-logo-demo">
+                        {% if getProfile().profile_photos %}
+                            <img src="/img/{{ getProfile().profile_photos.0.path }}">
+                        {% else %}
+                            <img src="/img/def_avatar.jpeg">
+                        {% endif %}
+                    </div>
+        
+                    <div class="">
+                        {{  getProfile().first_name }} {{  getProfile().last_name }}
+                        <br>
+                        <br>
+                        <p style="color: grey;">{{ getProfile().user.username }}</p>
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="burger-menu-list">
+                <p style="color: #ccc; padding:10px 20px; font-size: 16px;">MAIN NAVIGATION</p>
+                <div>
+                    {% if getProfile() %}
+                        <a href="{{ url_for('profile-index') }}">
+                            <div class="menu-link"><i class="fa-regular fa-user"></i> &nbsp My Profile</div>
+                        </a>
+
+                        <a href="{{ url_for('discovery_settings-get') }}">
+                            <div class="menu-link"><i class="fa-solid fa-sliders"></i> &nbsp Discovery Settings</div>
+                        </a>
+
+                        {% if not getProfile().user.is_google_auth %}
+                            <a href="{{ url_for('account_settings-get') }}">
+                                <div class="menu-link"><i class="fa-solid fa-gears"></i> &nbsp Account Settings</div>
+                            </a>
+                        {% endif %}
+                        <a href="{{ url_for('match-index') }}">
+                            <div class="menu-link"><i class="fa-solid fa-fire"></i> &nbsp Find a Match</div>
+                        </a>
+
+                        <a href="{{ url_for('my_matches-get') }}">
+                            <div class="menu-link"><i class="fa-solid fa-users-viewfinder"></i> &nbsp My Matches</div>
+                        </a>
+                        
+                        <a href="{{ url_for('activity_log-get') }}">
+                            <div class="menu-link"><i class="fa-solid fa-calendar"></i> &nbsp Activity Log</div>
+                        </a>
+                    {% else %}
+                         <a href="{{ full_url_for('signin-get') }}">
+                            <div class="menu-link"><i class="fa-solid fa-right-to-bracket"></i> &nbsp Sign In </div>
+                        </a>
+                        <a href="{{ full_url_for('signup-get') }}">
+                            <div class="menu-link"><i class="fa-solid fa-user-plus"></i> &nbsp Sign Up</div>
+                        </a>
+                        <a href="/">
+                            <div class="menu-link"><i class="fa-solid fa-house"></i> &nbsp Main Page</div>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+
+            <div class="header-logo">
+                <button class="header__burger-btn" id="burger">
+                    <span></span><span></span><span></span>
+                </button>
+                <p style="font-size: 30px; color: #ff445a; padding: 20px;">
+                    <a href="{{ url_for('home') }}">
+                        <b>Matcha</b>
+                    </a>
+                </p>
+            </div>
+            <div class="nav-bar">
+                {% if getProfile() %}
+                    <a href="{{ url_for('notifications-index') }}" class="nav-link">
+                        <i class="fa-regular fa-bell" id="notification">
+                            {% set count_unreviewed_notifications = getProfile().count_unreviewed_notifications %}
+                            <span class="amount" id="notification_count" style="background-color:#C14D4B;
+                                {% if count_unreviewed_notifications %}
+                                    ">{{ count_unreviewed_notifications }}</span>
+                                {% else %}
+                                    display:none;">0</span>
+                                {% endif %}
+                            
+                            
+                            
+                        </i> 
+                    </a>
+                    <a href="{{ url_for('chats-index') }}" class="nav-link">
+                        <i class="fa-regular fa-comment" id="messages">
+                            {% set count_unreviewed_messages = getProfile().count_unreviewed_messages %}
+                            {% if count_unreviewed_messages %}
+                                <span class="amount" style="background-color:#ecbe14"><b>{{ count_unreviewed_messages }}</b></span>
+                            {% endif %}
+                        </i>
+                    </a>
+                    <a href="{{ url_for('signout-get') }}" class="nav-link menu-link" style="font-size:20px;">
+                        Logout
+                    </a>
+                {% else %}
+                    <a href="{{ full_url_for('signin-get') }}" class="nav-link menu-link" style="font-size:20px; margin-left: 0;">
+                        Sign In
+                    </a>
+                    <a href="{{ full_url_for('signup-get') }}" class="nav-link menu-link" style="font-size:20px; margin-left: 0;">
+                        Sign Up
+                    </a>
+                {% endif %}
+                
+            </div>
+            
+        </div>
+
+
+
+
+        <div class="content">
+
+        {% block content %}
+        {% endblock %}
+        
+        </div>
+
+
+
+
+
+        <div class="footer">
+            © 2023 The Matcha Project
+            <br>
+            Developed with <i class="fa-solid fa-hand-holding-heart"></i> by Oleksii Krasnolutskyi
+        </div>
+    </div>
+</body>
+</html>

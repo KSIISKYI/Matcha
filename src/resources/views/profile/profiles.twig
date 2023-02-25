@@ -1,0 +1,61 @@
+{% extends 'layouts/base.twig' %}
+
+{% block headers %}
+<link rel="stylesheet" type="text/css" href="/css/find_match.css">
+<script defer src="/js/profiles.js"></script>
+<script defer src="/js/notification.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="profiles_grid">
+    {% for profile in profiles %}
+        <a href="{{ url_for('profile-show', {'profile_id': profile.id}) }}">
+            <div class="tinder--card" style="position: relative; width: 100%; cursor:pointer;">
+                {% if profile.match %}
+                    <i class="fa-solid fa-heart profile_like"></i>
+                {% elseif profile.liked %}
+                    <i class="fa-regular fa-heart profile_like"></i>
+                {% endif %}
+
+                {% if profile.profile_photos.0 %}
+                    <img src="/img/{{ profile.profile_photos.0.path }}">
+                {% else %}
+                    <img src="/img/def_avatar.jpeg">
+                {% endif %}
+
+                <div id="shadow" style="pointer-events: none;"></div> 
+                <div style="position: absolute; bottom: 0; color: #dddddd; padding: 20px; pointer-events: none;">
+                    <h1>{{ profile.user.username }}, {{ profile.age }}</h1>
+                    <br>
+                    <p><i class="fa-solid fa-desktop"></i> <span>{{ profile.last_activity }}</span></p>
+                    <br>
+                    <p><i class="fa-solid fa-location-dot"></i> {{ profile.distance }} kilometer(s) from you</p>  
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+</div>
+
+{% if page_obj.has_other_pages %}
+    <div class="pgn">
+        {% if page_obj.has_previous and  page_obj.previous_page_number != 1 %}
+            <a href="{{ url_for('activity_log-get') }}?page=1"><div class="pgn__cell"><<</div></a>
+        {% endif %}
+
+        {% if page_obj.has_previous %}
+            <a href="{{ url_for('activity_log-get') }}?page={{ page_obj.previous_page_number }}"><div class="pgn__cell"><</div></a>
+        {% endif %}
+        
+        <div class="pgn__cell pgn__cell_press">{{ page_obj.current_page_number }}</div>
+
+        {% if page_obj.has_next %}
+            <a href="{{ url_for('activity_log-get') }}?page={{ page_obj.next_page_number }}"><div class="pgn__cell">></div></a>
+        {% endif %}
+
+        {% if page_obj.has_next and  page_obj.next_page_number != page_obj.last_page_number %}
+            <a href="{{ url_for('activity_log-get') }}?page={{ page_obj.last_page_number }}"><div class="pgn__cell">>></div></a>
+        {% endif %}
+    </div>
+{% endif %}
+
+{% endblock %}
