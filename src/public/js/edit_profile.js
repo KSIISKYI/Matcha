@@ -107,14 +107,6 @@ function cropp_img(raw_img, cropped_img) {
 	cropped_img.src = canvas.toDataURL('image/jpeg', 1.0);
 }
 
-
-function htmlToElement(html) {
-    var template = document.createElement('template');
-    html = html.trim(); // Never return a text node of whitespace as the result
-    template.innerHTML = html;
-    return template.content.firstChild;
-}
-
 function remove_img() {
 	let new_el_id = Math.random();
 	let new_el = htmlToElement(`<div class="add_img">\
@@ -160,13 +152,13 @@ document.querySelector('#update_profile').addEventListener('submit', function(e)
 
 	let form_data = new FormData(e.target);
 
-	send_edit_profile_form(form_data).then(console.log('finosh'));
+	send_edit_profile_form(form_data);
 });
 
 async function send_edit_profile_form(form_data) {
 
 	for(img_id of rm_images) {
-		await fetch(`http://localhost:8000/profile/profile_images/${img_id}`, {
+		await fetch(`/profile/profile_images/${img_id}`, {
 			method: 'DELETE'
 		})
 	}
@@ -175,13 +167,13 @@ async function send_edit_profile_form(form_data) {
 		let img_new_form = new FormData;
 		img_new_form.append('img_base64', new_img.replace(/^data:image\/jpeg;base64,/, ''));
 
-		 await fetch('http://localhost:8000/profile/profile_images', {
+		 await fetch('/profile/profile_images', {
 			method: 'POST',
 			body: img_new_form
 		})
 	}
 
-	await fetch(`http://localhost:8000/profile/settings`, {
+	await fetch(`/profile/settings`, {
 		method: 'POST',
 		body: form_data
 	})

@@ -101,5 +101,21 @@ $container->set('DiscoverySettingsController', function (Container $container) {
     return new \App\Controllers\DiscoverySettingsController($container);
 });
 
+$container->set('MatchController', function (Container $container) {
+    return new \App\Controllers\MatchController($container);
+});
+
+$container->set('ChatController', function (Container $container) {
+    return new \App\Controllers\ChatController($container);
+});
+
+$container->set('NotificationController', function (Container $container) {
+    return new \App\Controllers\NotificationController($container);
+});
+
+$container->set('MessageController', function (Container $container) {
+    return new \App\Controllers\MessageController($container);
+});
+
 $routes = require_once __DIR__ . '/../app/routes.php';
 $routes($app);

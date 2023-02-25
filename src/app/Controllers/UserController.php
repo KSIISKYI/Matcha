@@ -68,7 +68,11 @@ class UserController extends Controller
 
     function changeMail(Request $request, Response $response)
     {
+        $flash = $this->container->get('flash');
+
         if(UserService::changeEmail($request->getParsedBody())) {
+            $_SESSION = [];
+            $flash->addMessage('message', 'Email changed successfully');
             return $response->withStatus(302)->withHeader('Location', $this->container->get('router')->urlFor('signin-get'));
         }
 

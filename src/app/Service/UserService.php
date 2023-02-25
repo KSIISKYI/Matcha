@@ -101,7 +101,8 @@ class UserService
     {
         $data['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
         $user = User::create($data);
-        ProfileService::createProfile($user);
+        $profile = ProfileService::createProfile($user);
+        mkdir(__DIR__ . '/../../public/img/profile_images/' . $profile->id, 0777);
         
         return $user;
     }

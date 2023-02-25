@@ -1,0 +1,84 @@
+{% extends 'layouts/base.twig' %}
+
+{% block headers %}
+<link rel="stylesheet" type="text/css" href="/css/notification.css">
+<script defer src="/js/moment.min.js"></script>
+<script defer src="/js/notification.js"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="notification">
+            <div class="form_grid">
+                <div style="text-align: center; color: grey; margin: 20px 0 0; font-size: 35px;">Notifications</div>
+
+                <hr>
+
+                <div class="form_grid" id="notifications">
+                    {% for notification in data %}
+                            <div class="notification-message
+                                {% if not notification.reviewed %}
+                                    not_reviewed
+                                {% endif %}
+                            " href="{{ full_url_for('notifications-show', {'notification_id': notification.id}) }}">
+                                <div style="position: relative; grid-row-start: 1; grid-row-end: 3;">
+                                    <div class="profile-logo-demo" style="margin:0;">
+                                        {% if notification.notifier.profile_photos %}
+                                            <img src="/img/{{ notification.notifier.profile_photos.0.path }}">
+                                        {% else %}
+                                            <img src="/img/def_avatar.jpeg">
+                                        {% endif %}
+                                    </div>
+                                    {% if notification.notifier.last_activity|date_modify("+1 hour")|date("U") > "now"|date("U")  %}
+                                        <div style="background-color: white; position: absolute; padding: 4px; border-radius: 50%; top: 73%; left: 74%;">
+                                            <div class="notification-message-status"></div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <h3 style="color: grey; align-self: flex-end;">{{ notification.notifier.user.username }}</h3>
+                                <div class="notification-time" style="color: #ccc; align-self: flex-end;" data="{{ notification.created_at|date("Y-m-d H:i") }}">
+                                    {{ notification.created_at|date("H:i") }}
+                                </div>
+                                <p style="color: #ccc; font-size: 19px; align-self: flex-start;">
+                                    {% if notification.event_id == 1 %}
+                                        Liked you <i class="fa-solid fa-heart" style="color: #ff0000ba;"></i>
+                                    {% else %}
+                                        New match <i class="fa-solid fa-fire" style="color: #ff0000ba;"></i>
+                                    {% endif %}
+                                </p>
+                                {% if not notification.reviewed %}
+                                    <div class="notification-message-status"></div>
+                                {% endif %}
+                            </div>
+                    {% endfor %}
+            
+                </div>
+
+                
+
+            </div>
+
+            {% if last_page > 1 %}
+                <div class="pgn">
+                    {% if current_page > 2 %}
+                        <a href="{{ first_page_url }}"><div class="pgn__cell"><<</div></a>
+                    {% endif %}
+
+                    {% if current_page > 1 %}
+                        <a href="{{ prev_page_url }}"><div class="pgn__cell"><</div></a>
+                    {% endif %}
+                    
+                    <div class="pgn__cell pgn__cell_press">{{ current_page }}</div>
+
+                    {% if next_page_url %}
+                        <a href="{{ next_page_url }}"><div class="pgn__cell">></div></a>
+                    {% endif %}
+
+                    {% if next_page_url and next_page_url != last_page_url %}
+                        <a href="{{ last_page_url }}"><div class="pgn__cell">>></div></a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
