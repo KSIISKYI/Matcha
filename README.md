@@ -59,5 +59,9 @@ php app/Service/Chat/server.php
 ```
 php -S localhost:8000 -t public
 ```
+#####Credentials for logging into the test account
+	username: my_user
+	password: Zxcvbnm2
+
 
 #### Enjoy :joy:
